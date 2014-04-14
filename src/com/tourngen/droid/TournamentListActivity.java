@@ -70,6 +70,8 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         // Or / And
         intent.putExtra("id", id);
         startActivity(intent);*/
+        Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
+        startActivity(tournamentIntent);
 		
 	}
 }
