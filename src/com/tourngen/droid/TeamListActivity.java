@@ -13,15 +13,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TournamentListActivity extends Activity implements OnItemClickListener{
+public class TeamListActivity extends Activity implements OnItemClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tournament_list);
+        setContentView(R.layout.team_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Dres's Tournaments");
-        ListView listview = (ListView) findViewById(R.id.tournaments);
+        setTitle("My Tournament: Teams");
+        ListView listview = (ListView) findViewById(R.id.teams);
         listview.setOnItemClickListener(this);
     }
 
@@ -51,12 +51,6 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    public void logout(View view)
-    {
-    	//TODO Implement log out logic
-    	finish();
-    }
 
 
 	@Override
@@ -71,8 +65,8 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         // Or / And
         intent.putExtra("id", id);
         startActivity(intent);*/
-        Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
-        startActivity(tournamentIntent);
+        /*Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
+        startActivity(tournamentIntent);*/
 		
 	}
 }

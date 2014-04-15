@@ -24,3 +24,6 @@ proguard/
 proguard-project.txt
 project.properties
 .DS_Store
+.classpath
+.project
+.settings

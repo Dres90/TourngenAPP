@@ -11,18 +11,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class TournamentListActivity extends Activity implements OnItemClickListener{
+public class FixtureListActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tournament_list);
+        setContentView(R.layout.fixture_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Dres's Tournaments");
-        ListView listview = (ListView) findViewById(R.id.tournaments);
-        listview.setOnItemClickListener(this);
+        setTitle("My Tournament: Fixtures");
+        fillMatches();
+
     }
 
 
@@ -52,27 +55,23 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         return super.onOptionsItemSelected(item);
     }
     
-    public void logout(View view)
+    private void fillMatches()
     {
-    	//TODO Implement log out logic
-    	finish();
+    	char letter = 'A';
+    	
+    	TableLayout table = (TableLayout) findViewById(R.id.fixture_table);
+    	table.removeAllViews();
+    	for(int i =0;i<50;i++)
+    	{
+    		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.match_row, null);
+    		((TextView)row.findViewById(R.id.match_num)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.match_home)).setText("Team "+letter);
+    		((TextView)row.findViewById(R.id.match_score)).setText(2 + " - " + 1);
+    		((TextView)row.findViewById(R.id.match_away)).setText("Team "+letter++);
+    		((TextView)row.findViewById(R.id.match_date)).setText("2014-01-01");
+    		table.addView(row);    	
+    	}
+    	table.requestLayout();
     }
 
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-        Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
-        // Then you start a new Activity via Intent
-        /*
-        Intent intent = new Intent();
-        intent.setClass(this, ListItemDetail.class);
-        intent.putExtra("position", position);
-        // Or / And
-        intent.putExtra("id", id);
-        startActivity(intent);*/
-        Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
-        startActivity(tournamentIntent);
-		
-	}
 }

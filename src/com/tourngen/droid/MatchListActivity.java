@@ -13,14 +13,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TournamentListActivity extends Activity implements OnItemClickListener{
+public class MatchListActivity extends Activity implements OnItemClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tournament_list);
+        setContentView(R.layout.match_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Dres's Tournaments");
+        setTitle("My Tournament: Matches");
         ListView listview = (ListView) findViewById(R.id.tournaments);
         listview.setOnItemClickListener(this);
     }

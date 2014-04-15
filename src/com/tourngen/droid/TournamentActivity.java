@@ -21,6 +21,7 @@ public class TournamentActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tournament);
+        setTitle("My Tournament");
         getActionBar().setDisplayHomeAsUpEnabled(true);
         fillPositions();
         
@@ -51,14 +52,46 @@ public class TournamentActivity extends Activity{
     
     private void fillPositions()
     {
+    	char letter = 'A';
     	
     	TableLayout table = (TableLayout) findViewById(R.id.tournament_table);
-    	for(int i =0;i<5;i++)
+    	table.removeAllViews();
+    	for(int i =0;i<25;i++)
     	{
     		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.position_row, null);
-    		//((TextView)row.findViewById(R.id.position_num)).setText(i+1);
+    		((TextView)row.findViewById(R.id.position_num)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_team)).setText("Team "+letter);
+    		((TextView)row.findViewById(R.id.position_pts)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gp)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gw)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gt)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gl)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gf)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_ga)).setText(String.valueOf(i+1));
+    		((TextView)row.findViewById(R.id.position_gd)).setText(String.valueOf(i+1));
+    		
+    		letter++;
     		table.addView(row);    	
     	}
     	table.requestLayout();
+    }
+    
+    public void onClick(View view)
+    {
+    	switch (view.getId())
+    	{
+    	case R.id.tournament_teams:
+            Intent teams = new Intent(getApplicationContext(),TeamListActivity.class);
+            startActivity(teams);
+    		break;
+    	case R.id.tournament_matches:
+            Intent matches = new Intent(getApplicationContext(),MatchListActivity.class);
+            startActivity(matches);
+    		break;
+    	case R.id.tournament_fixtures:
+            Intent fixtures = new Intent(getApplicationContext(),FixtureListActivity.class);
+            startActivity(fixtures);
+    		break;
+    	}
     }
 }

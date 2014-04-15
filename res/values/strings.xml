@@ -23,18 +23,32 @@
         <item >Torneo Extra</item>
   
     </string-array>
-        <string name="team">Team</string>
-        <string name="teams">Teams</string>
-        <string name="fixtures">Fixtures</string>
-        <string name="matches">Matches</string>
-        <string name="pos">Pos</string>
-        <string name="pts">Pts</string>
-        <string name="gp">GP</string>
-        <string name="gw">GW</string>
-        <string name="gt">GT</string>
-        <string name="gl">GL</string>
-        <string name="gf">GF</string>
-        <string name="ga">GA</string>
-        <string name="gd">GD</string>
+    <string name="team">Team</string>
+    <string name="teams">Teams</string>
+    <string name="fixtures">Fixtures</string>
+    <string name="matches">Matches</string>
+    <string name="pos">Pos</string>
+    <string name="pts">Pts</string>
+    <string name="gp">GP</string>
+    <string name="gw">GW</string>
+    <string name="gt">GT</string>
+    <string name="gl">GL</string>
+    <string name="gf">GF</string>
+    <string name="ga">GA</string>
+    <string name="gd">GD</string>
+    <string-array name="Teams">
+        <item >Team A</item>
+        <item >Team B</item>
+        <item >Team C</item>
+        <item >Team D</item>
+        <item >Team E</item>
+        <item >Team F</item>
+        <item >Team G</item>
+    </string-array>
+    <string name="num">#</string>
+    <string name="home_team">Home Team</string>
+    <string name="score">Score</string>
+    <string name="away_team">Away Team</string>
+    <string name="date">Date</string>
 	
 </resources>

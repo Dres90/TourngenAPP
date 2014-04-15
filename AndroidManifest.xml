@@ -30,6 +30,12 @@
             ></activity>
         <activity android:name=".TournamentActivity"
             android:parentActivityName=".TournamentListActivity"></activity>
+        <activity android:name=".FixtureListActivity"
+            android:parentActivityName=".TournamentActivity"></activity>
+        <activity android:name=".MatchListActivity"
+            android:parentActivityName=".TournamentActivity"></activity>
+        <activity android:name=".TeamListActivity"
+            android:parentActivityName=".TournamentActivity"></activity>
     </application>
 
 </manifest>
