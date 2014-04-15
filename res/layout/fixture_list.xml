@@ -56,18 +56,10 @@
         android:layout_height="0dip"
         android:layout_weight="0.9" >
 
-        <TableLayout
+       <TableLayout
             android:id="@+id/fixture_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/fixture_row"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-            </TableRow>
 
         </TableLayout>
 

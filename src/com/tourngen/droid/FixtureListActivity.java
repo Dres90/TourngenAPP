@@ -1,22 +1,20 @@
 package com.tourngen.droid;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Spinner;
 
-public class FixtureListActivity extends Activity{
+public class FixtureListActivity extends Activity implements OnItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +22,9 @@ public class FixtureListActivity extends Activity{
         setContentView(R.layout.fixture_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("My Tournament: Fixtures");
-        fillMatches();
+        Spinner spinner = (Spinner) findViewById(R.id.fixture_selector);
+        spinner.setOnItemSelectedListener(this);
+        
 
     }
 
@@ -55,9 +55,9 @@ public class FixtureListActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
     
-    private void fillMatches()
+    private void fillMatches(int fixtureID)
     {
-    	char letter = 'A';
+    	char letter = (char)fixtureID;
     	
     	TableLayout table = (TableLayout) findViewById(R.id.fixture_table);
     	table.removeAllViews();
@@ -73,5 +73,20 @@ public class FixtureListActivity extends Activity{
     	}
     	table.requestLayout();
     }
+
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+			long id) {
+		fillMatches((int)id+64);
+		
+	}
+
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		fillMatches(64);
+		
+	}
 
 }
