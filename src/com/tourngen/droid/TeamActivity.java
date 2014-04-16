@@ -18,14 +18,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MatchListActivity extends Activity{
+public class TeamActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.match_list);
+        setContentView(R.layout.team);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("My Tournament: Matches");
+        setTitle("My Team");
         fillMatches();
     }
 
@@ -74,6 +74,7 @@ public class MatchListActivity extends Activity{
     	}
     	table.requestLayout();
     }
+    
     public void selectMatch(View view)
     {
     	Intent matchIntent = new Intent(getApplicationContext(),MatchActivity.class);

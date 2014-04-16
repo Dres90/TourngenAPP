@@ -18,15 +18,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MatchListActivity extends Activity{
+public class MatchActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.match_list);
+        setContentView(R.layout.match);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("My Tournament: Matches");
-        fillMatches();
     }
 
 
@@ -47,7 +45,7 @@ public class MatchListActivity extends Activity{
         switch(id)
         {
         	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
+        		finish();
         		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
@@ -55,29 +53,6 @@ public class MatchListActivity extends Activity{
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    private void fillMatches()
-    {
-    	char letter = 'A';
-    	
-    	TableLayout table = (TableLayout) findViewById(R.id.match_table);
-    	table.removeAllViews();
-    	for(int i =0;i<50;i++)
-    	{
-    		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.match_row, null);
-    		((TextView)row.findViewById(R.id.match_num)).setText(String.valueOf(i+1));
-    		((TextView)row.findViewById(R.id.match_home)).setText("Team "+letter);
-    		((TextView)row.findViewById(R.id.match_score)).setText(2 + " - " + 1);
-    		((TextView)row.findViewById(R.id.match_away)).setText("Team "+letter++);
-    		((TextView)row.findViewById(R.id.match_date)).setText("2014-01-01");
-    		table.addView(row);    	
-    	}
-    	table.requestLayout();
-    }
-    public void selectMatch(View view)
-    {
-    	Intent matchIntent = new Intent(getApplicationContext(),MatchActivity.class);
-        startActivity(matchIntent);
-    }
+
 
 }

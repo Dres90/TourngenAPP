@@ -50,5 +50,11 @@
     <string name="score">Score</string>
     <string name="away_team">Away Team</string>
     <string name="date">Date</string>
+    <string name="info">Info</string>
+    <string name="decrease_goals">Decrease Goals</string>
+    <string name="increase_goals">Increase Goals</string>
+    <string name="played">Played</string>
+    <string name="not_played">Not Played</string>
+    <string name="fixture">Fixture</string>
 	
 </resources>

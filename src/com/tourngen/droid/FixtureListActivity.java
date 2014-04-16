@@ -1,6 +1,7 @@
 package com.tourngen.droid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -88,5 +89,10 @@ public class FixtureListActivity extends Activity implements OnItemSelectedListe
 		fillMatches(64);
 		
 	}
+    public void selectMatch(View view)
+    {
+    	Intent matchIntent = new Intent(getApplicationContext(),MatchActivity.class);
+        startActivity(matchIntent);
+    }
 
 }

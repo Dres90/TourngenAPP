@@ -56,7 +56,6 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-        Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
         /*
         Intent intent = new Intent();
@@ -65,8 +64,8 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
         // Or / And
         intent.putExtra("id", id);
         startActivity(intent);*/
-        /*Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
-        startActivity(tournamentIntent);*/
+        Intent teamIntent = new Intent(getApplicationContext(),TeamActivity.class);
+        startActivity(teamIntent);
 		
 	}
 }

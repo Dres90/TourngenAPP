@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" 
+    android:minHeight="30dp"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:onClick="selectMatch">
         <TextView
             android:id="@+id/match_num"
             android:layout_width="0dp"
