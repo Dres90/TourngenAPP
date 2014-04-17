@@ -6,11 +6,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:baselineAligned="false" >
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -39,37 +40,51 @@
             android:layout_weight="1"
             android:orientation="vertical" >
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/tournament_start"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Start: 14-03-2014"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:gravity="center_vertical" >
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tournament_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/start_date"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
+                <TextView
+                    android:id="@+id/tournament_sDate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="@string/test_date" />
 
-            <TextView
-                android:id="@+id/tournament_end"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="End: 15-03-2014"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/tournament_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/end_date"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/tournament_eDate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="@string/test_date" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
