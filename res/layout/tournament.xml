@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:text="Home and Away"
+                android:text="@string/home_and_away"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <CheckBox
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:text="Public"
+                android:text="@string/public"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
@@ -39,21 +39,33 @@
             android:layout_weight="1"
             android:orientation="vertical" >
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
             <TextView
                 android:id="@+id/tournament_start"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_gravity="bottom|right"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Start: 14-03-2014"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
             <TextView
                 android:id="@+id/tournament_end"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_gravity="bottom|right"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="End: 15-03-2014"
