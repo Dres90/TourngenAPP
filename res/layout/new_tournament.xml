@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -11,19 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/newT_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/new_tournament_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10" >
+            android:ems="10"
+            android:hint="@string/name" >
 
             <requestFocus />
         </EditText>
@@ -32,7 +26,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="40dp"
+        android:gravity="center_vertical" >
 
         <TextView
             android:id="@+id/textView2"
@@ -42,16 +37,19 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:id="@+id/new_tournament_start"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:gravity="right"
+            android:text="@string/test_date"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="40dp"
+        android:gravity="center_vertical" >
 
         <TextView
             android:id="@+id/textView4"
@@ -61,36 +59,39 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
+            android:id="@+id/new_tournament_end"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:gravity="right"
+            android:text="@string/test_date"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|center_horizontal" >
 
         <CheckBox
             android:id="@+id/checkBox1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CheckBox" />
+            android:text="@string/private_" />
 
         <CheckBox
             android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CheckBox" />
+            android:text="@string/home_and_away" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
         android:text="@string/info"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

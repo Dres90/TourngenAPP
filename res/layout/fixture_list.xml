@@ -2,6 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:orientation="vertical" >
 
     <Spinner
@@ -13,13 +17,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center" >
 
         <TextView
             android:id="@+id/match_num"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/num" />
 
         <TextView
@@ -27,13 +33,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
+            android:gravity="center"
             android:text="@string/home_team" />
 
         <TextView
             android:id="@+id/match_score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
+            android:gravity="center"
             android:text="@string/score" />
 
         <TextView
@@ -41,14 +49,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
+            android:gravity="center"
             android:text="@string/away_team" />
 
         <TextView
             android:id="@+id/match_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="4"
+            android:gravity="center"
             android:text="@string/date" />
+
     </LinearLayout>
 
 <ScrollView
