@@ -27,7 +27,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/textView2"
@@ -37,12 +38,14 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/new_tournament_start"
+            android:id="@+id/new_tournament_sDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="@string/test_date"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:gravity="center_vertical|right" 
+            android:text="@string/start_date"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:clickable="true"
+            android:onClick="showDatePicker"/>
 
     </LinearLayout>
 
@@ -56,15 +59,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/end_date"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:clickable="true"
+            android:onClick="showDatePicker"/>
 
         <TextView
-            android:id="@+id/new_tournament_end"
+            android:id="@+id/new_tournament_eDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="@string/test_date"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="@string/end_date"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:gravity="center_vertical|right"
+			android:clickable="true"
+            android:onClick="showDatePicker"/>
 
     </LinearLayout>
 

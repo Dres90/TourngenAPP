@@ -20,7 +20,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tournament_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Dres's Tournaments");
+        setTitle("My Tournaments");
         ListView listview = (ListView) findViewById(R.id.tournaments);
         listview.setOnItemClickListener(this);
     }
@@ -30,7 +30,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.tournament, menu);
         return true;
     }
 
@@ -47,7 +47,11 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
-                return true;	
+                return true;
+        	case R.id.new_tournament_button:
+        		Intent newTournamentIntent = new Intent(getApplicationContext(),NewTournamentActivity.class);
+        		startActivity(newTournamentIntent);
+        		return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -5,8 +5,42 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom|center_horizontal" >
+
+        <Button
+            android:id="@+id/tournament_teams"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/teams" />
+
+        <Button
+            android:id="@+id/tournament_fixtures"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/fixtures" />
+
+        <Button
+            android:id="@+id/tournament_matches"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/matches" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:baselineAligned="false" >
 
         <LinearLayout
@@ -99,7 +133,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/pos"
+            android:gravity="center"
+            android:text="@string/num"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -107,6 +142,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3.5"
+            android:gravity="center"
             android:text="@string/team"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -115,6 +151,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/pts"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -123,6 +160,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gp"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -131,6 +169,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gw"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -139,6 +178,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gt"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -147,6 +187,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gl"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -155,6 +196,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gf"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -163,6 +205,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/ga"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -171,8 +214,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/gd"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
     </LinearLayout>
 
     <ScrollView
@@ -189,36 +234,5 @@
         </TableLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|center_horizontal" >
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/tournament_teams"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/teams" 
-            android:onClick="onClick"/>
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/tournament_fixtures"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fixtures" 
-            android:onClick="onClick"/>
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/tournament_matches"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/matches" 
-            android:onClick="onClick"/>
-    </LinearLayout>
 
 </LinearLayout>

@@ -9,13 +9,11 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 	
-	private int tournament;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
 

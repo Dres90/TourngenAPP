@@ -62,5 +62,7 @@
     <string name="home_and_away">Home &amp; Away</string>
     <string name="test_date">01-05-2015</string>
     <string name="private_">Private</string>
+    <string name="add_team">Add Team</string>
+    <string name="new_team">New Team</string>
 	
 </resources>

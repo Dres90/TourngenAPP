@@ -1,33 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="1" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <ListView
         android:id="@+id/tournaments"
         android:layout_width="match_parent"
-        android:layout_column="0"
-        android:layout_gravity="left|top"
-        android:layout_row="3"
+        android:layout_height="match_parent"
         android:entries="@array/Tournaments" >
 
     </ListView>
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_column="0"
-        android:layout_gravity="left|top"
-        android:layout_row="1"
-        android:onClick="logout"
-        android:text="@string/log_out" />
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_column="0"
-        android:layout_gravity="top|right"
-        android:layout_row="1"
-        android:contentDescription="@string/new_tournament"
-        android:src="@android:drawable/ic_input_add" />
-
-</GridLayout>
+</LinearLayout>

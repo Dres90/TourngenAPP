@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/new_tournament_button" android:title="@string/new_tournament" android:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_add"></item>
+    <item android:id="@+id/sync_button" android:title="@string/sync" android:showAsAction="ifRoom" android:icon="@android:drawable/ic_popup_sync"></item>
+    <item android:id="@+id/logout_button" android:title="@string/log_out" android:showAsAction="never"></item>
+</menu>

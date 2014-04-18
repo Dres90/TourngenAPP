@@ -10,31 +10,36 @@
             android:id="@+id/match_num"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/match_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"/>
+            android:layout_weight="4"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/match_score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"/>
+            android:layout_weight="3"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/match_away"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"/>
+            android:layout_weight="4"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/match_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"/>
+            android:layout_weight="4"
+            android:gravity="center"/>
     
 
 </TableRow>
