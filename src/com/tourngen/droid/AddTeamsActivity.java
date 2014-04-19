@@ -1,24 +1,22 @@
 package com.tourngen.droid;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 
 
-public class AddTeamsActivity extends Activity implements NewTeamFragment.NewTeamDialogListener{
+public class AddTeamsActivity extends Activity implements OnClickListener{
 	
-	public ArrayAdapter<String> adapter;
+	public ArrayAdapter<CharSequence> teamnames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +25,8 @@ public class AddTeamsActivity extends Activity implements NewTeamFragment.NewTea
         setTitle("Add teams");
         getActionBar().setDisplayHomeAsUpEnabled(true);
         ListView list = (ListView) this.findViewById(R.id.new_team_list);
-        adapter  = new ArrayAdapter<String>(getApplicationContext(),R.layout.team_row);
-        list.setAdapter(adapter);
+        teamnames  = new ArrayAdapter<CharSequence>(getApplicationContext(),R.layout.team_row,R.id.new_team_text);
+        list.setAdapter(teamnames);
     }
 
 
@@ -58,22 +56,54 @@ public class AddTeamsActivity extends Activity implements NewTeamFragment.NewTea
         return super.onOptionsItemSelected(item);
     }
     
+    
     private void addTeam()
     {
     	DialogFragment startFragment = new NewTeamFragment();
         startFragment.show(getFragmentManager(), "new team");
     }
-
+    
+    public void addButtonListener()
+    {
+		ListView list = (ListView) this.findViewById(R.id.new_team_list);
+		int i = list.getChildCount();
+		if(i>0)
+		{
+			
+			View view = list.getChildAt(i-1);
+			ImageButton button = (ImageButton) view.findViewById(R.id.new_team_delete);
+			button.setOnClickListener(this);
+			button.setTag(teamnames.getItem(i-1));
+		}
+    }
 
 	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
-		
-		
+	public void onClick(View v) {
+		switch(v.getId())
+		{
+		case R.id.new_team_delete:
+			deleteTeam((CharSequence)v.getTag());
+	
+			break;
+		}
+
+
 	}
 
-
-	@Override
-	public void onDialogNegativeClick(DialogFragment dialog) {
+	private void deleteTeam(CharSequence name)
+	{
+		ListView list = (ListView) this.findViewById(R.id.new_team_list);
+		int count = teamnames.getCount();
+		int pos = teamnames.getPosition(name);
+		for (int i=pos;i<count-1;i++)
+		{
+			View view = list.getChildAt(i);
+			View nextView = list.getChildAt(i+1);
+			ImageButton button = (ImageButton) view.findViewById(R.id.new_team_delete);
+			ImageButton nextButton = (ImageButton) nextView.findViewById(R.id.new_team_delete);
+			button.setTag(nextButton.getTag());
+		}
+		teamnames.remove(name);
 		
 		
 	}

@@ -64,5 +64,6 @@
     <string name="private_">Private</string>
     <string name="add_team">Add Team</string>
     <string name="new_team">New Team</string>
+    <string name="delete_team">Delete Team</string>
 	
 </resources>

@@ -12,8 +12,10 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:text="@string/new_team"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/new_team_name"
@@ -21,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:ems="10"
-        android:hint="@string/name" >
+        android:hint="@string/name"
+        android:inputType="textVisiblePassword" >
 
         <requestFocus />
     </EditText>
