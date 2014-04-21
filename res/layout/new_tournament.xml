@@ -81,13 +81,13 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <CheckBox
-            android:id="@+id/checkBox1"
+            android:id="@+id/new_private_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/private_" />
 
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/new_haw_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_and_away" />
@@ -103,7 +103,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/new_tournament_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

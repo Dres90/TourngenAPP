@@ -1,14 +1,16 @@
 package com.tourngen.droid;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -17,6 +19,8 @@ import android.widget.ImageButton;
 public class AddTeamsActivity extends Activity implements OnClickListener{
 	
 	public ArrayAdapter<CharSequence> teamnames;
+	public Tournament tournament;
+	public ArrayList<Team> teams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,12 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
         ListView list = (ListView) this.findViewById(R.id.new_team_list);
         teamnames  = new ArrayAdapter<CharSequence>(getApplicationContext(),R.layout.team_row,R.id.new_team_text);
         list.setAdapter(teamnames);
+        Intent intent = getIntent();
+        tournament = (Tournament)intent.getSerializableExtra("tournament");
+        intent.removeExtra("tournament");
+        //teams = new ArrayList<Team>();
+        teams = tournament.getTeams();
+        updateButtonListener();
     }
 
 
@@ -49,7 +59,10 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
         		addTeam();
         		return true;
         	case R.id.confirm_edit:
-        		Toast.makeText(getApplicationContext(), "Save button pressed!", Toast.LENGTH_SHORT).show();
+        		Intent newMatchesIntent = new Intent(getApplicationContext(), NewMatchesActivity.class);
+        		tournament.setTeams(teams);
+        		newMatchesIntent.putExtra("tournament", tournament);
+        		startActivity(newMatchesIntent);
         		return true;
         		
         }
@@ -83,7 +96,6 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
 		{
 		case R.id.new_team_delete:
 			deleteTeam((CharSequence)v.getTag());
-	
 			break;
 		}
 
@@ -104,8 +116,19 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
 			button.setTag(nextButton.getTag());
 		}
 		teamnames.remove(name);
-		
-		
+		teams.remove(teams.get(pos));
 	}
     
+    private void updateButtonListener()
+    {
+		ListView list = (ListView) this.findViewById(R.id.new_team_list);
+		for (int i = 0; i< list.getChildCount();i++)
+		{
+			View view = list.getChildAt(i);
+			ImageButton button = (ImageButton) view.findViewById(R.id.new_team_delete);
+			button.setOnClickListener(this);
+			button.setTag(teamnames.getItem(i));
+		}
+
+    }
 }

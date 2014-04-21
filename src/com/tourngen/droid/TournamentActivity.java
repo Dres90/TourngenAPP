@@ -1,5 +1,11 @@
 package com.tourngen.droid;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,27 +13,31 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TableRow;
 import android.widget.Toast;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class TournamentActivity extends Activity{
-
+	
+	Tournament tournament;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tournament);
-        setTitle("My Tournament");
+        Intent intent = getIntent();
+        tournament = (Tournament)intent.getSerializableExtra("tournament");
+        setTitle(tournament.getName());
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        fillPositions();
+        renderViews();
         
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-                // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -47,17 +57,32 @@ public class TournamentActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
     
-    private void fillPositions()
+    private void renderViews()
     {
-    	char letter = 'A';
+		Calendar start = tournament.getStartDate();
+		TextView textview = (TextView) findViewById(R.id.tournament_sDate);
+		DateFormat dateFormat = new SimpleDateFormat("dd/LLL/yyyy", Locale.US);
+		textview.setText(dateFormat.format(start.getTime()));
+		
+		Calendar end = tournament.getEndDate();
+		TextView textview1 = (TextView) findViewById(R.id.tournament_eDate);
+		DateFormat dateFormat1 = new SimpleDateFormat("dd/LLL/yyyy", Locale.US);
+		textview1.setText(dateFormat1.format(end.getTime()));
     	
+    	CheckBox homeAndAway = (CheckBox) findViewById(R.id.tournament_homeaway);
+    	homeAndAway.setChecked(tournament.isHomeandaway());
+    	CheckBox isPublic = (CheckBox) findViewById(R.id.tournament_public);
+    	isPublic.setChecked(!tournament.isIspublic());
+    	
+    	ArrayList<Team> teams = tournament.getTeams(); 
+
     	TableLayout table = (TableLayout) findViewById(R.id.tournament_table);
     	table.removeAllViews();
-    	for(int i =0;i<25;i++)
+    	for(int i =0;i<teams.size();i++)
     	{
     		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.position_row, null);
     		((TextView)row.findViewById(R.id.position_num)).setText(String.valueOf(i+1));
-    		((TextView)row.findViewById(R.id.position_team)).setText("Team "+letter);
+    		((TextView)row.findViewById(R.id.position_team)).setText(teams.get(i).getName());
     		((TextView)row.findViewById(R.id.position_pts)).setText(String.valueOf(i+1));
     		((TextView)row.findViewById(R.id.position_gp)).setText(String.valueOf(i+1));
     		((TextView)row.findViewById(R.id.position_gw)).setText(String.valueOf(i+1));
@@ -67,7 +92,6 @@ public class TournamentActivity extends Activity{
     		((TextView)row.findViewById(R.id.position_ga)).setText(String.valueOf(i+1));
     		((TextView)row.findViewById(R.id.position_gd)).setText(String.valueOf(i+1));
     		
-    		letter++;
     		table.addView(row);    	
     	}
     	table.requestLayout();
@@ -79,14 +103,17 @@ public class TournamentActivity extends Activity{
     	{
     	case R.id.tournament_teams:
             Intent teams = new Intent(getApplicationContext(),TeamListActivity.class);
+            teams.putExtra("tournament", tournament);
             startActivity(teams);
     		break;
     	case R.id.tournament_matches:
             Intent matches = new Intent(getApplicationContext(),MatchListActivity.class);
+            matches.putExtra("tournament", tournament);
             startActivity(matches);
     		break;
     	case R.id.tournament_fixtures:
             Intent fixtures = new Intent(getApplicationContext(),FixtureListActivity.class);
+            fixtures.putExtra("tournament", tournament);
             startActivity(fixtures);
     		break;
     	}

@@ -1,50 +1,52 @@
 package com.tourngen.droid;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class TournamentListActivity extends Activity implements OnItemClickListener{
 
+	ArrayAdapter<Tournament> tournaments;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tournament_list);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("My Tournaments");
+
+        tournaments = new ArrayAdapter<Tournament>(getApplicationContext(),R.layout.general_list_row,R.id.list_text);
+
         ListView listview = (ListView) findViewById(R.id.tournaments);
+        listview.setAdapter(tournaments);
         listview.setOnItemClickListener(this);
+        
+        Intent intent = getIntent();
+        Tournament newTournament = (Tournament)intent.getSerializableExtra("tournament");
+        if (newTournament!=null)
+        	tournaments.add(newTournament);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tournament, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
                 return true;
@@ -66,16 +68,8 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-        Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
-        // Then you start a new Activity via Intent
-        /*
-        Intent intent = new Intent();
-        intent.setClass(this, ListItemDetail.class);
-        intent.putExtra("position", position);
-        // Or / And
-        intent.putExtra("id", id);
-        startActivity(intent);*/
         Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
+        tournamentIntent.putExtra("tournament",(Tournament)parent.getAdapter().getItem(position));
         startActivity(tournamentIntent);
 		
 	}

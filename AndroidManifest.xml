@@ -44,6 +44,8 @@
             android:parentActivityName=".TournamentListActivity"></activity>
         <activity android:name=".AddTeamsActivity"
             android:parentActivityName=".NewTournamentActivity"></activity>
+        <activity android:name=".NewMatchesActivity"
+            android:parentActivityName=".AddTeamsActivity"></activity>
     </application>
 
 </manifest>

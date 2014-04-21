@@ -13,21 +13,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TeamActivity extends Activity{
+	
+	Team team;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("My Team");
+        Intent intent = getIntent();
+        team = (Team)intent.getSerializableExtra("team");
+        setTitle("Team: "+team.getName());
+        
         fillMatches();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }

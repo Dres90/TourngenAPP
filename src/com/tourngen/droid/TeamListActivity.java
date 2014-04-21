@@ -9,35 +9,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class TeamListActivity extends Activity implements OnItemClickListener{
-
+	
+	Tournament tournament;
+	ArrayAdapter<Team> teams;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("My Tournament: Teams");
+        Intent intent = getIntent();
+        tournament = (Tournament)intent.getSerializableExtra("tournament");
+        setTitle(tournament.getName()+": Teams");
         ListView listview = (ListView) findViewById(R.id.teams);
+        teams = new ArrayAdapter<Team>(getApplicationContext(),R.layout.general_list_row,R.id.list_text);
+        listview.setAdapter(teams);
         listview.setOnItemClickListener(this);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch(id)
         {
@@ -55,15 +59,8 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-        // Then you start a new Activity via Intent
-        /*
-        Intent intent = new Intent();
-        intent.setClass(this, ListItemDetail.class);
-        intent.putExtra("position", position);
-        // Or / And
-        intent.putExtra("id", id);
-        startActivity(intent);*/
         Intent teamIntent = new Intent(getApplicationContext(),TeamActivity.class);
+        teamIntent.putExtra("team", (Team)parent.getAdapter().getItem(position));
         startActivity(teamIntent);
 		
 	}

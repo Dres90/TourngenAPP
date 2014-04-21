@@ -1,0 +1,4 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/shuffle_button" android:title="@string/shuffle" android:showAsAction="always" android:icon="@android:drawable/ic_popup_sync"></item>
+	<item android:id="@+id/confirm_edit" android:title="@android:string/ok" android:showAsAction="always" android:icon="@android:drawable/ic_menu_save"></item>
+</menu>

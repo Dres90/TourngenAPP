@@ -37,7 +37,18 @@ public class NewTeamFragment extends DialogFragment implements DialogInterface.O
 			getDialog().findViewById(R.id.new_team_info).requestFocus();
 			EditText nameView = (EditText) getDialog().findViewById(R.id.new_team_name);
 			teamname = nameView.getText();
-			((AddTeamsActivity) this.getActivity()).teamnames.add(teamname);
+			if (teamname.toString().equals(""))
+				return;
+			AddTeamsActivity parent = ((AddTeamsActivity) this.getActivity());
+			parent.teamnames.add(teamname);
+			Team team = new Team(teamname.toString(), parent.tournament);
+			EditText emailView = (EditText) getDialog().findViewById(R.id.new_team_email);
+			CharSequence email = emailView.getText();
+			team.setEmail(email.toString());
+			EditText infoView = (EditText) getDialog().findViewById(R.id.new_team_info);
+			CharSequence info = infoView.getText();
+			team.setInfo(info.toString());
+			parent.teams.add(team);
 			break;
 		}
 		

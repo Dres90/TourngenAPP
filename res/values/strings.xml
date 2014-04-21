@@ -60,10 +60,11 @@
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="home_and_away">Home &amp; Away</string>
-    <string name="test_date">01-05-2015</string>
+    <string name="test_date">Test Date</string>
     <string name="private_">Private</string>
     <string name="add_team">Add Team</string>
     <string name="new_team">New Team</string>
     <string name="delete_team">Delete Team</string>
-	
+	<string name="shuffle">Shuffle</string>
+	<string name="dash">-</string>
 </resources>

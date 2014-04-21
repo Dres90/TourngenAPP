@@ -1,29 +1,42 @@
 package com.tourngen.droid;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.widget.TextView;
+import android.widget.CheckBox;
 
 public class NewTournamentActivity extends Activity{
-
+	
+	public Calendar start;
+	public Calendar end;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_tournament);
         setTitle("New Tournament");
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        start = Calendar.getInstance();
+        end = Calendar.getInstance();
         
+		TextView textview = (TextView) findViewById(R.id.new_tournament_sDate);
+		DateFormat dateFormat = new SimpleDateFormat("dd/LLL/yyyy", Locale.US);
+		textview.setText(dateFormat.format(start.getTime()));
+		
+		TextView textview1 = (TextView) findViewById(R.id.new_tournament_eDate);
+		DateFormat dateFormat1 = new SimpleDateFormat("dd/LLL/yyyy", Locale.US);
+		textview1.setText(dateFormat1.format(end.getTime()));
     }
 
 
@@ -43,7 +56,14 @@ public class NewTournamentActivity extends Activity{
         		NavUtils.navigateUpFromSameTask(this);
         		return true;
         	case R.id.confirm_edit:
+        		Tournament tournament = new Tournament(((TextView) findViewById(R.id.new_tournament_name)).getText().toString());
+        		tournament.setStartDate(start);
+        		tournament.setEndDate(end);
+        		tournament.setIspublic(!((CheckBox)findViewById(R.id.new_private_box)).isChecked());
+        		tournament.setHomeandaway(((CheckBox)findViewById(R.id.new_haw_box)).isChecked());
+        		tournament.setInfo(((TextView) findViewById(R.id.new_tournament_info)).getText().toString());
         		Intent addTeamsIntent = new Intent(getApplicationContext(), AddTeamsActivity.class);
+        		addTeamsIntent.putExtra("tournament", tournament);
         		startActivity(addTeamsIntent);
         		return true;
         }
@@ -65,32 +85,4 @@ public class NewTournamentActivity extends Activity{
     	}
     }
 
-public static class DatePickerFragment extends DialogFragment
-    implements DatePickerDialog.OnDateSetListener {
-
-@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// Use the current date as the default date in the picker
-		final Calendar c = Calendar.getInstance();
-		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH);
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		
-		// Create a new instance of DatePickerDialog and return it
-		return new DatePickerDialog(getActivity(), this, year, month, day);
-		}
-		
-		public void onDateSet(DatePicker view, int year, int month, int day) {
-			if (this.getTag()=="start")
-			{
-				TextView textview = (TextView)this.getActivity().findViewById(R.id.new_tournament_sDate);
-				textview.setText(String.valueOf(day)+'-'+String.valueOf(month+1)+'-'+String.valueOf(year));
-			}
-			else if (this.getTag()=="end")
-			{
-				TextView textview = (TextView)this.getActivity().findViewById(R.id.new_tournament_eDate);
-				textview.setText(String.valueOf(day)+'-'+String.valueOf(month+1)+'-'+String.valueOf(year));
-			}
-		}
-	}
 }
