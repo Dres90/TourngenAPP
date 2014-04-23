@@ -35,7 +35,7 @@ public class MatchGenerator {
     	System.out.println("Fixture Count "+ fixtureCount);
     	System.out.println("Games per Fixture "+ gamesPerFixture);
     	
-    	ArrayList<Team> tempTeams =  teams;
+    	ArrayList<Team> tempTeams =  new ArrayList<Team>(teams);
     	
     	if(teams.size()%2!=0)
     		tempTeams.add(null);
@@ -106,18 +106,20 @@ public class MatchGenerator {
         	for (int j = 0;j<size;j++)
         	{
         		Fixture fixture = fixtures.get(j);
-        		Fixture newFixture = new Fixture(tournament,size*2-j);
+        		Fixture newFixture = new Fixture(tournament,2*size-j);
         		ArrayList<Match> matches = new ArrayList<Match>();
         		for (int k = 0;k<fixture.getMatches().size();k++)
         		{
         			Match match = fixture.getMatches().get(k).getRevertedMatch();
-        			match.setFixture(fixture);
+        			match.setFixture(newFixture);
         			matches.add(match);
         		}
         		newFixture.setMatches(matches);
         		fixtures.add(size,newFixture);
         	}
+
     	}
+
 		return fixtures;
 	}
 	

@@ -9,7 +9,6 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,6 @@ public class TournamentActivity extends Activity{
         Intent intent = getIntent();
         tournament = (Tournament)intent.getSerializableExtra("tournament");
         setTitle(tournament.getName());
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         renderViews();
         
     }
@@ -47,9 +45,6 @@ public class TournamentActivity extends Activity{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
                 return true;	

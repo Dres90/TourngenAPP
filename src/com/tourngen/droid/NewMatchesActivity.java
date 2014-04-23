@@ -22,7 +22,6 @@ public class NewMatchesActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_matches);
         setTitle("Match List");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         tournament = (Tournament)intent.getSerializableExtra("tournament");
         teams = tournament.getTeams();
@@ -41,10 +40,6 @@ public class NewMatchesActivity extends Activity{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		//NavUtils.navigateUpFromSameTask(this);
-        		finish();
-        		return true;
         	case R.id.shuffle_button:
         		generateMatches();
         		renderListView();

@@ -3,7 +3,6 @@ package com.tourngen.droid;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +21,11 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team_list);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         tournament = (Tournament)intent.getSerializableExtra("tournament");
         setTitle(tournament.getName()+": Teams");
         ListView listview = (ListView) findViewById(R.id.teams);
-        teams = new ArrayAdapter<Team>(getApplicationContext(),R.layout.general_list_row,R.id.list_text);
+        teams = new ArrayAdapter<Team>(getApplicationContext(),R.layout.general_list_row,R.id.list_text,tournament.getTeams());
         listview.setAdapter(teams);
         listview.setOnItemClickListener(this);
     }
@@ -45,9 +43,6 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
                 return true;	

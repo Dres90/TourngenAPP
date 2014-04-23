@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,14 +26,11 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_teams);
         setTitle("Add teams");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         ListView list = (ListView) this.findViewById(R.id.new_team_list);
         teamnames  = new ArrayAdapter<CharSequence>(getApplicationContext(),R.layout.team_row,R.id.new_team_text);
         list.setAdapter(teamnames);
         Intent intent = getIntent();
         tournament = (Tournament)intent.getSerializableExtra("tournament");
-        intent.removeExtra("tournament");
-        //teams = new ArrayList<Team>();
         teams = tournament.getTeams();
         updateButtonListener();
     }
@@ -52,9 +48,6 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.new_team_button:
         		addTeam();
         		return true;

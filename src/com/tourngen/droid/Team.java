@@ -1,6 +1,7 @@
 package com.tourngen.droid;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Team implements Serializable{
 	
@@ -8,7 +9,7 @@ public class Team implements Serializable{
 	private String email;
 	private String info;
 	private Tournament tournament;
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1L;
 	
 	public Team (String name, Tournament tournament)
 	{
@@ -44,6 +45,29 @@ public class Team implements Serializable{
 	public String toString()
 	{
 		return name;
+	}
+	
+	
+	public ArrayList<Match> getMatches()
+	{
+		ArrayList<Match> matches = new ArrayList<Match>();
+		ArrayList<Fixture> fixtures = new ArrayList<Fixture>(tournament.getFixtures());
+		
+		for (int i = 0; i<fixtures.size();i++)
+		{
+			Fixture fixture = fixtures.get(i);
+			ArrayList<Match> fMatches = fixture.getMatches();
+			for (int j = 0; j<fMatches.size();j++)
+			{
+				Match match = fMatches.get(j);
+				if (match.getHome().equals(this)||match.getAway().equals(this))
+				{
+					matches.add(match);
+				}
+			}
+		}
+		
+		return matches;
 	}
 
 }

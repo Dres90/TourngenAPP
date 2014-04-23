@@ -3,7 +3,6 @@ package com.tourngen.droid;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,6 @@ public class MatchListActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("My Tournament: Matches");
         fillMatches();
     }
@@ -40,9 +38,6 @@ public class MatchListActivity extends Activity{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.sync_button:
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
                 return true;	

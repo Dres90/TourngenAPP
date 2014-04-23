@@ -1,6 +1,9 @@
 package com.tourngen.droid;
 
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         Tournament newTournament = (Tournament)intent.getSerializableExtra("tournament");
         if (newTournament!=null)
         	tournaments.add(newTournament);
+        addTestTournament();
     }
 
 
@@ -72,5 +76,41 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         tournamentIntent.putExtra("tournament",(Tournament)parent.getAdapter().getItem(position));
         startActivity(tournamentIntent);
 		
+	}
+	
+	private void addTestTournament()
+	{
+		Tournament tournament = new Tournament("test");
+		tournament.setStartDate(Calendar.getInstance());
+		tournament.setEndDate(Calendar.getInstance());
+		tournament.setHomeandaway(true);
+		tournament.setInfo("Test tournament");
+		tournament.setIspublic(true);
+		
+		ArrayList<Team> teams = new ArrayList<Team>();
+		for (int i = (int)'A'; i<=(int)'E'; i++)
+		{
+			Team team = new Team("Team "+(char)i,tournament);
+			team.setEmail("team"+(char)i+"@mail.com");
+			team.setInfo("Test team "+(char)i);
+			teams.add(team);
+		}
+		
+		tournament.setTeams(teams);
+		MatchGenerator generator = new MatchGenerator(tournament);
+		tournament.setFixtures(generator.getFixtures());
+		
+		ArrayList<Fixture> fixtures = tournament.getFixtures();
+		for (int i = 0; i<fixtures.size()-2; i++)
+		{
+			Fixture fixture = fixtures.get(i);
+			ArrayList<Match> matches = fixture.getMatches();
+			for (int j = 0; j< matches.size(); j++)
+			{
+				matches.get(j).setPlayed(true);
+			}
+		}
+		
+		tournaments.add(tournament);
 	}
 }

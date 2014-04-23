@@ -8,7 +8,6 @@ import java.util.Locale;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +25,6 @@ public class NewTournamentActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_tournament);
         setTitle("New Tournament");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         start = Calendar.getInstance();
         end = Calendar.getInstance();
         
@@ -52,9 +50,6 @@ public class NewTournamentActivity extends Activity{
         int id = item.getItemId();
         switch(id)
         {
-        	case android.R.id.home:
-        		NavUtils.navigateUpFromSameTask(this);
-        		return true;
         	case R.id.confirm_edit:
         		Tournament tournament = new Tournament(((TextView) findViewById(R.id.new_tournament_name)).getText().toString());
         		tournament.setStartDate(start);

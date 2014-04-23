@@ -14,7 +14,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/match_fixture"
+            android:id="@+id/textview1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -22,11 +22,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/match_fixture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -65,7 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/decrease_goals"
-            android:src="@android:drawable/arrow_down_float" />
+            android:src="@android:drawable/arrow_down_float" 
+            android:onClick="onClick"/>
 
         <EditText
             android:id="@+id/home_score"
@@ -82,7 +82,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/increase_goals"
-            android:src="@android:drawable/arrow_up_float" />
+            android:src="@android:drawable/arrow_up_float"
+            android:onClick="onClick"/>
 
     </LinearLayout>
 
@@ -96,7 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/decrease_goals"
-            android:src="@android:drawable/arrow_down_float" />
+            android:src="@android:drawable/arrow_down_float"
+            android:onClick="onClick"/>
 
         <EditText
             android:id="@+id/away_score"
@@ -112,7 +114,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/increase_goals"
-            android:src="@android:drawable/arrow_up_float" />
+            android:src="@android:drawable/arrow_up_float"
+            android:onClick="onClick"/>
 
     </LinearLayout>
 
@@ -124,7 +127,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/match_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/info"

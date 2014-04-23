@@ -22,30 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TournamentListActivity"
-            android:parentActivityName=".MainActivity"
-            ></activity>
-        <activity android:name=".SignupActivity"
-            android:parentActivityName=".MainActivity"
-            ></activity>
-        <activity android:name=".TournamentActivity"
-            android:parentActivityName=".TournamentListActivity"></activity>
-        <activity android:name=".FixtureListActivity"
-            android:parentActivityName=".TournamentActivity"></activity>
-        <activity android:name=".MatchListActivity"
-            android:parentActivityName=".TournamentActivity"></activity>
-        <activity android:name=".TeamListActivity"
-            android:parentActivityName=".TournamentActivity"></activity>
-        <activity android:name=".TeamActivity"
-            android:parentActivityName=".TeamListActivity"></activity>
-        <activity android:name=".MatchActivity"
-            android:parentActivityName=".MatchListActivity"></activity>
-        <activity android:name=".NewTournamentActivity"
-            android:parentActivityName=".TournamentListActivity"></activity>
-        <activity android:name=".AddTeamsActivity"
-            android:parentActivityName=".NewTournamentActivity"></activity>
-        <activity android:name=".NewMatchesActivity"
-            android:parentActivityName=".AddTeamsActivity"></activity>
+        <activity android:name=".TournamentListActivity"></activity>
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".TournamentActivity"></activity>
+        <activity android:name=".FixtureListActivity"></activity>
+        <activity android:name=".MatchListActivity"></activity>
+        <activity android:name=".TeamListActivity"></activity>
+        <activity android:name=".TeamActivity"></activity>
+        <activity android:name=".MatchActivity"></activity>
+        <activity android:name=".NewTournamentActivity"></activity>
+        <activity android:name=".AddTeamsActivity"></activity>
+        <activity android:name=".NewMatchesActivity"></activity>
     </application>
 
 </manifest>
