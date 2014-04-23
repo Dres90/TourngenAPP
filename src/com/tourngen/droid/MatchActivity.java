@@ -62,6 +62,7 @@ public class MatchActivity extends Activity{
 		((EditText) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
 		((TextView) findViewById(R.id.match_aTeam)).setText(match.getAway().getName());
 		((EditText) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
+		((TextView) findViewById(R.id.match_info)).setText(match.getInfo());
     }
     
     public void onClick(View view)
@@ -102,5 +103,14 @@ public class MatchActivity extends Activity{
     		}
     		break;
     	}	
+    }
+    public void changePlayed(View view){
+    	match.setPlayed(((ToggleButton) findViewById(R.id.match_played)).isChecked());
+    }
+    
+    @Override
+    protected void onPause(){
+    	DataHolder.getInstance().getTournament().store(getApplicationContext());
+    	super.onPause();
     }
 }

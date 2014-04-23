@@ -68,7 +68,8 @@ public class Config implements Serializable{
 			return false;
 		} catch (ClassNotFoundException e) {
 			return false;
+		} catch (NullPointerException e) {
+			return false;
 		}
-
 	}
 }

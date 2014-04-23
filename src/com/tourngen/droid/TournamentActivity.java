@@ -109,6 +109,7 @@ public class TournamentActivity extends Activity{
     		break;
     	case R.id.tournament_fixtures:
             Intent fixtures = new Intent(getApplicationContext(),FixtureListActivity.class);
+            DataHolder.getInstance().setFixture(null);
             startActivity(fixtures);
     		break;
     	}

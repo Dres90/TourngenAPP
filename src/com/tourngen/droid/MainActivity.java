@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +21,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         System.out.println(getFilesDir());
         File file = new File("config");
-        if(file.exists())
+        if(file.exists()&&Config.load(getApplicationContext()))
         {
-        	Config.load(getApplicationContext());
         	((TextView) findViewById(R.id.login_user)).setText(Config.getInstance().getUserName());
         }
         else
@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
     }
     
     public void login(View view)
-    {
+    {	
         Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);
         String username = ((TextView) findViewById(R.id.login_user)).getText().toString();
         Config.getInstance().setUserName(username);
@@ -56,10 +56,37 @@ public class MainActivity extends Activity {
         startActivity(login);
     }
     
+    public void confirmLogin(int status)
+    {
+    	
+    }
+    
     public void signup(View view)
     {
         Intent signup = new Intent(getApplicationContext(),SignupActivity.class);
         startActivity(signup);
     }
+    
+    
+    private class LoginTask extends AsyncTask<String, Void, Integer> {
 
+		@Override
+		protected Integer doInBackground(String... params) {
+			String username = params[0];
+			String password = params[1];
+			
+			
+			
+			
+			
+			
+			return 1;
+		}
+        
+        protected int onPostExecute(int result) {
+            return result;
+        }
+
+
+    }
 }

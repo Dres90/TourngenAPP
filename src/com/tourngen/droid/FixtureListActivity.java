@@ -1,5 +1,10 @@
 package com.tourngen.droid;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,18 +21,32 @@ import android.widget.Toast;
 import android.widget.Spinner;
 
 public class FixtureListActivity extends Activity implements OnItemSelectedListener{
+	
+	Tournament tournament;
+	Fixture fixture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fixture_list);
-        setTitle("My Tournament: Fixtures");
-        Spinner spinner = (Spinner) findViewById(R.id.fixture_selector);
-        spinner.setOnItemSelectedListener(this);
-        
-
     }
 
+    @Override
+    protected void onResume(){
+    	super.onResume();
+        setTitle("My Tournament: Fixtures");
+        Spinner spinner = (Spinner) findViewById(R.id.fixture_selector);
+        ArrayAdapter<Fixture> fixtures = new ArrayAdapter<Fixture>(getApplicationContext(), R.layout.fixture_item, DataHolder.getInstance().getTournament().getFixtures());
+        fixture = DataHolder.getInstance().getFixture();
+        spinner.setAdapter(fixtures);
+        spinner.setOnItemSelectedListener(this);
+        
+        if (fixture!=null)
+        {
+        	int pos = fixtures.getPosition(fixture);
+        	spinner.setSelection(pos);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,42 +68,57 @@ public class FixtureListActivity extends Activity implements OnItemSelectedListe
         return super.onOptionsItemSelected(item);
     }
     
-    private void fillMatches(int fixtureID)
+    private void fillMatches(Fixture fixture)
     {
-    	char letter = (char)fixtureID;
-    	
+
     	TableLayout table = (TableLayout) findViewById(R.id.fixture_table);
     	table.removeAllViews();
-    	for(int i =0;i<50;i++)
+    	ArrayList<Match> matches = fixture.getMatches();
+    	for(int i=0;i<matches.size();i++)
     	{
     		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.match_row, null);
+    		Match match = matches.get(i);
     		((TextView)row.findViewById(R.id.match_num)).setText(String.valueOf(i+1));
-    		((TextView)row.findViewById(R.id.match_home)).setText("Team "+letter);
-    		((TextView)row.findViewById(R.id.match_score)).setText(2 + " - " + 1);
-    		((TextView)row.findViewById(R.id.match_away)).setText("Team "+letter++);
-    		((TextView)row.findViewById(R.id.match_date)).setText("2014-01-01");
+    		((TextView)row.findViewById(R.id.match_home)).setText(match.getHome().getName());
+    		if (match.isPlayed())
+    		{
+    			((TextView)row.findViewById(R.id.match_score)).setText(match.getHomeGoal() + " - " + match.getAwayGoal());
+    		}
+    		else
+    		{
+        		((TextView)row.findViewById(R.id.match_score)).setText("  -  ");
+        	}	
+    		((TextView)row.findViewById(R.id.match_away)).setText(match.getAway().getName());
+    		DateFormat dateFormat = new SimpleDateFormat("dd/LLL/yyyy", Locale.US);
+    		((TextView)row.findViewById(R.id.match_date)).setText(dateFormat.format(match.getDate().getTime()));
+    		row.setTag(match);
     		table.addView(row);    	
     	}
     	table.requestLayout();
     }
-
-
+    
+    
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		fillMatches((int)id+64);
-		
+		fillMatches((Fixture)parent.getItemAtPosition(position));
+		DataHolder.getInstance().setFixture((Fixture)parent.getItemAtPosition(position));
 	}
 
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
-		fillMatches(64);
-		
+		if (fixture==null)
+			parent.setSelection(1);
+		else
+			//parent.setSelection(tournament.getFixtures().indexOf(fixture));
+			parent.setSelection(2);
 	}
+	
     public void selectMatch(View view)
     {
     	Intent matchIntent = new Intent(getApplicationContext(),MatchActivity.class);
+    	DataHolder.getInstance().setMatch((Match)view.getTag());
         startActivity(matchIntent);
     }
 
