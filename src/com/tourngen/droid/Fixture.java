@@ -2,6 +2,7 @@ package com.tourngen.droid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Fixture implements Serializable{
 	
@@ -9,14 +10,33 @@ public class Fixture implements Serializable{
 	private int number;
 	private String info;
 	private ArrayList<Match> matches;
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1L;
+	private int extId;
+	private Calendar last_updated;
 	
+	public int getExtId() {
+		return extId;
+	}
+
+	public void setExtId(int extId) {
+		this.extId = extId;
+	}
+
+	public Calendar getLast_updated() {
+		return last_updated;
+	}
+
+	public void setLast_updated(Calendar last_updated) {
+		this.last_updated = last_updated;
+	}
+
 	public Fixture(Tournament tournament, int number)
 	{
 		this.tournament=tournament;
 		this.number=number;
 		this.info="";
-		matches = new ArrayList<Match>();
+		this.matches = new ArrayList<Match>();
+		this.last_updated = Calendar.getInstance();
 	}
 	
 	public Tournament getTournament() {

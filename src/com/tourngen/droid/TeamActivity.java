@@ -24,36 +24,15 @@ public class TeamActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team);
-        Intent intent = getIntent();
-        team = (Team)intent.getSerializableExtra("team");
-        setTitle("Team: "+team.getName());
-        renderViews();
     }
     
-    /*protected void onResume()
+    @Override
+    protected void onResume()
     {
     	super.onResume();
+    	team = DataHolder.getInstance().getTeam();
+    	setTitle("Team: "+team.getName());
     	renderViews();
-    	Toast.makeText(getApplicationContext(), "On Resume!", Toast.LENGTH_SHORT).show();
-    }*/
-    
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	
-    	if (resultCode == Activity.RESULT_OK)
-    	{
-    		Toast.makeText(getApplicationContext(), "Result OK!", Toast.LENGTH_SHORT).show();
-    	}
-    	else if (resultCode == Activity.RESULT_CANCELED)
-    	{
-    		Toast.makeText(getApplicationContext(), "Result Cancelled!", Toast.LENGTH_SHORT).show();
-    	}
-    	else
-    	{
-    		Toast.makeText(getApplicationContext(), "No result", Toast.LENGTH_SHORT).show();
-    	}
-    	renderViews();
-    	
     }
 
 
@@ -65,9 +44,6 @@ public class TeamActivity extends Activity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch(id)
         {
@@ -114,9 +90,8 @@ public class TeamActivity extends Activity{
     public void selectMatch(View view)
     {
     	Intent matchIntent = new Intent(getApplicationContext(),MatchActivity.class);
-    	Match match = (Match)view.getTag();
-    	matchIntent.putExtra("match", match);
-        startActivityForResult(matchIntent,1);
+    	DataHolder.getInstance().setMatch((Match)view.getTag());
+        startActivity(matchIntent);
     }
 
 }

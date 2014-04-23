@@ -13,7 +13,9 @@ public class Match implements Serializable{
 	private int hGoal;
 	private int aGoal;
 	private boolean played;
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
+	private int extId;
+	private Calendar last_updated;
 	
 	public Match(Tournament tournament, Team home, Team away){
 		this.tournament = tournament;
@@ -24,7 +26,7 @@ public class Match implements Serializable{
 		this.hGoal = 0;
 		this.aGoal = 0;
 		this.played = false;
-		
+		this.last_updated = Calendar.getInstance();
 	}
 	
 	public Tournament getTournament() {
@@ -97,6 +99,21 @@ public class Match implements Serializable{
 	{
 		Match match = new Match(tournament,away,home);
 		return match;
+	}
+	public int getExtId() {
+		return extId;
+	}
+
+	public void setExtId(int extId) {
+		this.extId = extId;
+	}
+
+	public Calendar getLast_updated() {
+		return last_updated;
+	}
+
+	public void setLast_updated(Calendar last_updated) {
+		this.last_updated = last_updated;
 	}
 
 }

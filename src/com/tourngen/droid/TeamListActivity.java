@@ -21,15 +21,18 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team_list);
-        Intent intent = getIntent();
-        tournament = (Tournament)intent.getSerializableExtra("tournament");
+    }
+    @Override
+    protected void onResume()
+    {
+    	super.onResume();
+        tournament = DataHolder.getInstance().getTournament();
         setTitle(tournament.getName()+": Teams");
         ListView listview = (ListView) findViewById(R.id.teams);
         teams = new ArrayAdapter<Team>(getApplicationContext(),R.layout.general_list_row,R.id.list_text,tournament.getTeams());
         listview.setAdapter(teams);
         listview.setOnItemClickListener(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,7 +58,7 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
         Intent teamIntent = new Intent(getApplicationContext(),TeamActivity.class);
-        teamIntent.putExtra("team", (Team)parent.getAdapter().getItem(position));
+        DataHolder.getInstance().setTeam((Team)parent.getAdapter().getItem(position));
         startActivity(teamIntent);
 		
 	}

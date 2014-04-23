@@ -47,7 +47,7 @@ public class NewMatchesActivity extends Activity{
         	case R.id.confirm_edit:
         		Intent saveTournament = new Intent(getApplicationContext(), TournamentListActivity.class);
         		tournament.setFixtures(fixtures);
-        		saveTournament.putExtra("tournament", tournament);
+        		tournament.store(getApplicationContext());
         		startActivity(saveTournament);
                 return true;	
         }

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +22,12 @@ public class MatchActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match);
-        Intent intent = getIntent();
-        match = (Match)intent.getSerializableExtra("match");
+    }
+    
+    @Override
+    protected void onResume(){
+    	super.onResume();
+        match = DataHolder.getInstance().getMatch();
         setTitle(match.getTournament().getName());
         renderViews();
     }

@@ -26,13 +26,16 @@ public class TournamentActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tournament);
-        Intent intent = getIntent();
-        tournament = (Tournament)intent.getSerializableExtra("tournament");
+    }
+    
+    @Override
+    protected void onResume()
+    {
+    	super.onResume();
+        tournament = DataHolder.getInstance().getTournament();
         setTitle(tournament.getName());
         renderViews();
-        
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,17 +101,14 @@ public class TournamentActivity extends Activity{
     	{
     	case R.id.tournament_teams:
             Intent teams = new Intent(getApplicationContext(),TeamListActivity.class);
-            teams.putExtra("tournament", tournament);
             startActivity(teams);
     		break;
     	case R.id.tournament_matches:
             Intent matches = new Intent(getApplicationContext(),MatchListActivity.class);
-            matches.putExtra("tournament", tournament);
             startActivity(matches);
     		break;
     	case R.id.tournament_fixtures:
             Intent fixtures = new Intent(getApplicationContext(),FixtureListActivity.class);
-            fixtures.putExtra("tournament", tournament);
             startActivity(fixtures);
     		break;
     	}
