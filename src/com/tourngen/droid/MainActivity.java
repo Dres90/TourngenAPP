@@ -3,6 +3,9 @@ package com.tourngen.droid;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -49,16 +52,19 @@ public class MainActivity extends Activity {
     
     public void login(View view)
     {	
-        Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);
-        String username = ((TextView) findViewById(R.id.login_user)).getText().toString();
-        Config.getInstance().setUserName(username);
-        Config.store(getApplicationContext());
-        startActivity(login);
+    	new LoginTask().execute("andres","password");
     }
     
     public void confirmLogin(int status)
     {
-    	
+    	if (status==1)
+    	{
+            Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);
+            String username = ((TextView) findViewById(R.id.login_user)).getText().toString();
+            Config.getInstance().setUserName(username);
+            Config.store(getApplicationContext());
+            startActivity(login);
+    	}
     }
     
     public void signup(View view)
@@ -68,23 +74,32 @@ public class MainActivity extends Activity {
     }
     
     
-    private class LoginTask extends AsyncTask<String, Void, Integer> {
+    private class LoginTask extends AsyncTask<String, Void, JSONObject> {
 
 		@Override
-		protected Integer doInBackground(String... params) {
+		protected JSONObject doInBackground(String... params) {
+			
+			JSONObject json;
 			String username = params[0];
 			String password = params[1];
-			
-			
-			
-			
-			
-			
-			return 1;
+			String identifier = "f379cfcf-e8cd-4990-ad96-e1ecdfc08edb";
+			String querystring = "password="+password+"&identifier="+identifier;
+			WSRequest request = new WSRequest(WSRequest.GET,"Login",username,querystring,null);
+			try {
+				json = request.getJSON();
+				return json;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
-        
-        protected int onPostExecute(int result) {
-            return result;
+		
+		@Override
+        protected void onPostExecute(JSONObject result) {
+			if (result==null)
+			System.out.println("Null");
+			else
+			System.out.println(result.toString());
         }
 
 
