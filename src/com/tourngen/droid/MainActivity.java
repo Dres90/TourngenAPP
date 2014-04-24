@@ -1,62 +1,63 @@
 package com.tourngen.droid;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
+	ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println(getFilesDir());
-        File file = new File("config");
-        if(file.exists()&&Config.load(getApplicationContext()))
-        {
-        	((TextView) findViewById(R.id.login_user)).setText(Config.getInstance().getUserName());
-        }
-        else
+        if(!Config.load(getApplicationContext()))
         {
         	Config.getInstance().setIds(new ArrayList<Integer>());
         	Config.getInstance().setNames(new ArrayList<String>());
         	Config.store(getApplicationContext());
-        } 
-        
+        }
     }
-
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        return true;
+    protected void onResume(){
+    	super.onResume();
+    	if(Config.getInstance().getToken()!=null)
+    	{
+    		Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);
+    		startActivity(login);
+    	}
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
     
     public void login(View view)
     {	
-    	new LoginTask().execute("andres","password");
+    	if (WSRequest.isOnline(getApplicationContext()))
+    	{
+    	progress = new ProgressDialog(this);
+    	progress.setTitle("Logging in");
+    	progress.setMessage("Please wait while we log you in");
+    	progress.show();
+    	new LoginTask().execute(((TextView) findViewById(R.id.login_user)).getText().toString(),((TextView) findViewById(R.id.login_password)).getText().toString());
+    	}
     }
     
     public void confirmLogin(int status)
     {
+    	progress.dismiss();
     	if (status==1)
     	{
             Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);
@@ -65,6 +66,12 @@ public class MainActivity extends Activity {
             Config.store(getApplicationContext());
             startActivity(login);
     	}
+    	if (status==0)
+    	{
+    		new AlertDialog.Builder(this).setTitle("Error").setMessage("Log in error").setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+    	        public void onClick(DialogInterface dialog, int which){}}).show();    		
+    	}
+    	
     }
     
     public void signup(View view)
@@ -72,7 +79,6 @@ public class MainActivity extends Activity {
         Intent signup = new Intent(getApplicationContext(),SignupActivity.class);
         startActivity(signup);
     }
-    
     
     private class LoginTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -82,26 +88,35 @@ public class MainActivity extends Activity {
 			JSONObject json;
 			String username = params[0];
 			String password = params[1];
-			String identifier = "f379cfcf-e8cd-4990-ad96-e1ecdfc08edb";
+			String identifier = UUID.randomUUID().toString();
 			String querystring = "password="+password+"&identifier="+identifier;
 			WSRequest request = new WSRequest(WSRequest.GET,"Login",username,querystring,null);
 			try {
 				json = request.getJSON();
 				return json;
 			} catch (JSONException e) {
-				e.printStackTrace();
+				return null;
 			}
-			return null;
 		}
 		
 		@Override
         protected void onPostExecute(JSONObject result) {
-			if (result==null)
-			System.out.println("Null");
-			else
-			System.out.println(result.toString());
+			try {
+					if (result==null)
+						confirmLogin(0);
+					else if(!result.getBoolean("success"))
+					{	
+						confirmLogin(0);
+					}
+					else
+					{
+						Config.getInstance().setToken(result.getString("token"));
+						confirmLogin(1);
+					}
+				}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
         }
-
-
     }
 }
