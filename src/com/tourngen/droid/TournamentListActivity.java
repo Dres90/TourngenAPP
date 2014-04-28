@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.SimpleArrayMap;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -232,12 +231,12 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
 							{
 								t = getTeams(t);
 								t = getMatches(t);
+								t.store(getApplicationContext());
 							}*/
-							
 							t = getTeams(t);
 							t = getMatches(t);
 							t.store(getApplicationContext());
-							
+
 							}
 						}
 						

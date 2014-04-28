@@ -63,7 +63,7 @@ public class WSRequest {
 		
 		client = CustomHttpClient.getHttpClient();
 		builder = new StringBuilder();
-	    url = "https://tourngen.com:2800/"+entity+"/";
+	    url = "https://tourngen.com:8080/"+entity+"/";
 	    if (identifier!=null)
 	    	url=url+identifier;
 	    if (querystring!=null)
