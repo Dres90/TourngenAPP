@@ -45,10 +45,10 @@ public class NewMatchesActivity extends Activity{
         		renderListView();
                 return true;	
         	case R.id.confirm_edit:
-        		Intent saveTournament = new Intent(getApplicationContext(), TournamentListActivity.class);
         		tournament.setFixtures(fixtures);
         		tournament.store(getApplicationContext());
-        		startActivity(saveTournament);
+        		setResult(RESULT_OK);
+        		finish();
                 return true;	
         }
         return super.onOptionsItemSelected(item);

@@ -14,7 +14,7 @@ public class Config implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	private String username;
 	public String getUserName(){return username;}
@@ -31,6 +31,10 @@ public class Config implements Serializable{
 	private ArrayList<String> tNames;
 	public ArrayList<String> getNames(){return tNames;}
 	public void setNames(ArrayList<String> names){this.tNames = names;}	
+	
+	private ArrayList<Integer> tPrivileges;
+	public ArrayList<Integer> getPrivileges(){return tPrivileges;}
+	public void setPrivileges(ArrayList<Integer> privileges){this.tPrivileges = privileges;}	
 	
 	private static final Config config = new Config();
 	public static Config getInstance() {return config;}
@@ -63,6 +67,7 @@ public class Config implements Serializable{
 		Config.getInstance().setToken(config.getToken()); 
 		Config.getInstance().setIds(new ArrayList<Integer>(config.getIds())); 
 		Config.getInstance().setNames(new ArrayList<String>(config.getNames()));
+		Config.getInstance().setPrivileges(new ArrayList<Integer>(config.getPrivileges()));
 		return true;
 		} catch (IOException e) {
 			return false;

@@ -19,6 +19,7 @@ public class NewTournamentActivity extends Activity{
 	
 	public Calendar start;
 	public Calendar end;
+	static final int NEW_TOURNAMENT_REQUEST = 1; 
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +60,21 @@ public class NewTournamentActivity extends Activity{
         		tournament.setInfo(((TextView) findViewById(R.id.new_tournament_info)).getText().toString());
         		Intent addTeamsIntent = new Intent(getApplicationContext(), AddTeamsActivity.class);
         		addTeamsIntent.putExtra("tournament", tournament);
-        		startActivity(addTeamsIntent);
+        		startActivityForResult(addTeamsIntent, NEW_TOURNAMENT_REQUEST);
         		return true;
         }
         return super.onOptionsItemSelected(item);
     }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == NEW_TOURNAMENT_REQUEST) {
+	        if (resultCode == RESULT_OK) {
+	        	setResult(RESULT_OK);
+	        	finish();
+	        }
+	    }
+	}
     
     public void showDatePicker(View view)
     {

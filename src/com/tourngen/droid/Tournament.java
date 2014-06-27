@@ -213,11 +213,13 @@ public class Tournament implements Serializable{
 	  	{
 	  		int pos = idList.indexOf(extId);
 	  		Config.getInstance().getNames().set(pos,name);
+	  		Config.getInstance().getPrivileges().set(pos, privilege);
 	  	}
 	  	else
 	  	{
 	  		Config.getInstance().getIds().add(extId);
 	  		Config.getInstance().getNames().add(name);
+	  		Config.getInstance().getPrivileges().add(privilege);
 	  	}
 	  	Config.store(context);
 	  	System.out.println("Succeeded to store tournament "+ name + " tId:"+extId);

@@ -20,6 +20,7 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
 	public ArrayAdapter<CharSequence> teamnames;
 	public Tournament tournament;
 	public ArrayList<Team> teams;
+	static final int NEW_TOURNAMENT_REQUEST = 1; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
         		Intent newMatchesIntent = new Intent(getApplicationContext(), NewMatchesActivity.class);
         		tournament.setTeams(teams);
         		newMatchesIntent.putExtra("tournament", tournament);
-        		startActivity(newMatchesIntent);
+        		startActivityForResult(newMatchesIntent,NEW_TOURNAMENT_REQUEST);
         		return true;
         		
         }
@@ -124,4 +125,14 @@ public class AddTeamsActivity extends Activity implements OnClickListener{
 		}
 
     }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == NEW_TOURNAMENT_REQUEST) {
+	        if (resultCode == RESULT_OK) {
+	        	setResult(RESULT_OK);
+	        	finish();
+	        }
+	    }
+	}
 }

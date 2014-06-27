@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.SimpleArrayMap;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
     		progress.show();
     		new GetTournamentsTask().execute(Config.getInstance().getToken());
     	}
-        tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.general_list_row,R.id.list_text,Config.getInstance().getNames());
+        tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.tournament_list_row,R.id.list_text,Config.getInstance().getNames());
         ListView listview = (ListView) findViewById(R.id.tournaments);
         listview.setAdapter(tournaments);
         listview.setOnItemClickListener(this);   
@@ -111,6 +112,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         startActivity(tournamentIntent);
 	}
 	
+	
     private class LogOutTask extends AsyncTask<String, Void, JSONObject> {
 
 		@Override
@@ -160,7 +162,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
 		
 		@Override
         protected void onPostExecute(Integer result) {
-				tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.general_list_row,R.id.list_text,Config.getInstance().getNames());
+				tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.tournament_list_row,R.id.list_text,Config.getInstance().getNames());
 				progress.dismiss();
 		}
 		
@@ -227,15 +229,16 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
 								t.setInfo(info);
 							}	
 							
-							/*if (!idList.contains(t.getExtId()))
+							if (!idList.contains(t.getExtId()))
 							{
+								Log.v("id list","Not contained");
+								Log.v("id",String.valueOf(t.getExtId()));
+								Log.v("name",t.getName());
 								t = getTeams(t);
 								t = getMatches(t);
 								t.store(getApplicationContext());
-							}*/
-							t = getTeams(t);
-							t = getMatches(t);
-							t.store(getApplicationContext());
+							}
+
 
 							}
 						}

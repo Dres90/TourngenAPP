@@ -70,7 +70,6 @@ public class WSRequest {
 	    	url=url+"?"+querystring;
 	    
 	    Log.v("URL",url);
-	    //Log.v("JSON",json.toString());
 		switch(method)
 		{
 		case WSRequest.GET:
