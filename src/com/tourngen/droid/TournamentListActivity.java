@@ -20,15 +20,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.View.OnClickListener;
+import android.widget.CheckBox;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class TournamentListActivity extends Activity implements OnItemClickListener{
+public class TournamentListActivity extends Activity implements OnClickListener{
 
-	ArrayAdapter<String> tournaments;
 	ProgressDialog progress;
 	
     @Override
@@ -50,10 +50,6 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
     		progress.show();
     		new GetTournamentsTask().execute(Config.getInstance().getToken());
     	}
-        tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.tournament_list_row,R.id.list_text,Config.getInstance().getNames());
-        ListView listview = (ListView) findViewById(R.id.tournaments);
-        listview.setAdapter(tournaments);
-        listview.setOnItemClickListener(this);   
     }
 
     @Override
@@ -68,6 +64,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         switch(id)
         {
         	case R.id.sync_button:
+        		System.out.println(Config.getInstance().getPrivileges());
             	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
                 return true;
         	case R.id.new_tournament_button:
@@ -80,7 +77,28 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         }
         return super.onOptionsItemSelected(item);
     }
-    
+    private void renderViews()
+    {
+    	TableLayout table = (TableLayout) findViewById(R.id.tournaments);
+    	table.removeAllViews();
+    	ArrayList<String> tournaments = Config.getInstance().getNames();
+    	for(int i =0;i<tournaments.size();i++)
+    	{
+    		TableRow row=(TableRow) this.getLayoutInflater().inflate(R.layout.tournament_list_row, null);
+    		row.setOnClickListener(this);
+    		row.setTag(Config.getInstance().getIds().get(i));
+    		((TextView)row.findViewById(R.id.list_text)).setText(tournaments.get(i));
+    		CheckBox check = (CheckBox) row.findViewById(R.id.list_check);
+			Integer privilege = Config.getInstance().getPrivileges().get(i);
+			if (privilege.equals(1)||privilege.equals(2))
+				check.setChecked(true);
+			else
+				check.setChecked(false);
+			
+    		table.addView(row);    	
+    	}
+    	table.requestLayout();
+      }
     public void logout()
     {
     	if (WSRequest.isOnline(getApplicationContext()))
@@ -104,24 +122,18 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
     }
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onClick(View v) {
         Intent tournamentIntent = new Intent(getApplicationContext(),TournamentActivity.class);
-        int tId = Config.getInstance().getIds().get(position);
+        int tId = (Integer) v.getTag();
         DataHolder.getInstance().setTournament(Tournament.getTournament("t"+tId,getApplicationContext()));
         startActivity(tournamentIntent);
 	}
-	
 	
     private class LogOutTask extends AsyncTask<String, Void, JSONObject> {
 
 		@Override
 		protected JSONObject doInBackground(String... params) {
-	    	Config.getInstance().setToken(null);
-	    	Config.getInstance().setUserName(null);
-	    	Config.getInstance().setIds(null);
-	    	Config.getInstance().setNames(null);
-	    	Config.store(getApplicationContext());
+	    	Config.clear(getApplicationContext());
 			JSONObject json;
 			String token = EscapeUtils.encodeURIComponent(params[0]);
 			WSRequest request = new WSRequest(WSRequest.DELETE,"Login",token,null,null);
@@ -162,7 +174,7 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
 		
 		@Override
         protected void onPostExecute(Integer result) {
-				tournaments = new ArrayAdapter<String>(getApplicationContext(),R.layout.tournament_list_row,R.id.list_text,Config.getInstance().getNames());
+				renderViews();
 				progress.dismiss();
 		}
 		
@@ -428,4 +440,5 @@ public class TournamentListActivity extends Activity implements OnItemClickListe
         }
         
     }
+
 }

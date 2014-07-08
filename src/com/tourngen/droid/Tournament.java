@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.util.Log;
 
 public class Tournament implements Serializable{
 	
@@ -225,6 +226,7 @@ public class Tournament implements Serializable{
 	  	System.out.println("Succeeded to store tournament "+ name + " tId:"+extId);
 		} catch (Exception e) {
 		System.out.println("Failed to store tournament "+ name + " tId:"+extId);
+		Log.e(e.getClass().getName(), e.getMessage(), e);
 		success = false;
 		}
 		return success;

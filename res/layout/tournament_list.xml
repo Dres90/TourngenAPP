@@ -7,7 +7,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="left" >
 
         <TextView
@@ -17,6 +16,8 @@
             android:text="@string/tournament"
             android:textColor="@color/team_text"
             android:textSize="30sp" />
+
+
 
         <TextView
             android:id="@+id/textView2"
@@ -29,13 +30,11 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/tournaments"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="20"
-        android:entries="@array/Tournaments" >
+            <TableLayout
+                android:id="@+id/tournaments"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" >
 
-    </ListView>
+        </TableLayout>
 
 </LinearLayout>

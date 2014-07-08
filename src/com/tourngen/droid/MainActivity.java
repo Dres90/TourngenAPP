@@ -24,17 +24,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(!Config.load(getApplicationContext()))
-        {
-        	Config.getInstance().setIds(new ArrayList<Integer>());
-        	Config.getInstance().setNames(new ArrayList<String>());
-        	Config.store(getApplicationContext());
-        }
     }
     
     @Override
     protected void onResume(){
     	super.onResume();
+        if(!Config.load(getApplicationContext()))
+        {
+        	Config.getInstance().setIds(new ArrayList<Integer>());
+        	Config.getInstance().setNames(new ArrayList<String>());
+        	Config.getInstance().setPrivileges(new ArrayList<Integer>());
+        	Config.store(getApplicationContext());
+        }
     	if(Config.getInstance().getToken()!=null)
     	{
     		Intent login = new Intent(getApplicationContext(),TournamentListActivity.class);

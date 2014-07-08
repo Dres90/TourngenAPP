@@ -1,5 +1,6 @@
 package com.tourngen.droid;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,5 +77,20 @@ public class Config implements Serializable{
 		} catch (NullPointerException e) {
 			return false;
 		}
+	}
+	public static boolean clear(Context context){
+		File dir = context.getFilesDir();
+		if (dir.isDirectory()) {
+	        String[] children = dir.list();
+	        for (int i = 0; i < children.length; i++) {
+	            new File(dir, children[i]).delete();
+	        }
+	    }
+    	Config.getInstance().setToken(null);
+    	Config.getInstance().setUserName(null);
+    	Config.getInstance().setIds(null);
+    	Config.getInstance().setNames(null);
+		return true;
+		
 	}
 }
