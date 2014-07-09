@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,12 +25,22 @@ import android.widget.ToggleButton;
 public class MatchActivity extends Activity{
 	
 	Match match;
+	int p;
 	ProgressDialog progress;
+	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.match);
+        match = DataHolder.getInstance().getMatch();
+        p = match.getTournament().getPrivilege(); 
+        if (p>=1&&p<=2)
+        {
+        	setContentView(R.layout.match);
+        }
+        else
+        	setContentView(R.layout.match_no_priv);
     }
     
     @Override
@@ -71,10 +82,18 @@ public class MatchActivity extends Activity{
 		((TextView) findViewById(R.id.match_date)).setText(dateFormat.format(match.getDate().getTime()));
 		((ToggleButton) findViewById(R.id.match_played)).setChecked(match.isPlayed());
 		((TextView) findViewById(R.id.match_hTeam)).setText(match.getHome().getName());
-		((EditText) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
 		((TextView) findViewById(R.id.match_aTeam)).setText(match.getAway().getName());
-		((EditText) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
 		((TextView) findViewById(R.id.match_info)).setText(match.getInfo());
+        if (p>=1&&p<=2)
+        {
+    		((EditText) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
+    		((EditText) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
+        }
+        else
+        {
+    		((TextView) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
+    		((TextView) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
+        }
     }
     
     public void onClick(View view)
@@ -89,6 +108,7 @@ public class MatchActivity extends Activity{
     		goal++;
     		match.setHomeGoal(goal);
     		home.setText(String.valueOf(goal));
+        	match.setLast_updated(Calendar.getInstance());
     		break;
     	case R.id.decrease_home:
     		goal = Integer.valueOf(home.getText().toString());
@@ -97,6 +117,7 @@ public class MatchActivity extends Activity{
     		goal--;
     		match.setHomeGoal(goal);
     		home.setText(String.valueOf(goal));
+        	match.setLast_updated(Calendar.getInstance());
     		}
     		break;
     	case R.id.increase_away:
@@ -104,6 +125,7 @@ public class MatchActivity extends Activity{
     		goal++;
     		match.setAwayGoal(goal);
     		away.setText(String.valueOf(goal));
+        	match.setLast_updated(Calendar.getInstance());
     		break;
     	case R.id.decrease_away:
     		goal = Integer.valueOf(away.getText().toString());
@@ -112,10 +134,11 @@ public class MatchActivity extends Activity{
     		goal--;
     		match.setAwayGoal(goal);
     		away.setText(String.valueOf(goal));
+        	match.setLast_updated(Calendar.getInstance());
     		}
     		break;
     	}
-    	match.setLast_updated(Calendar.getInstance());
+
     }
     public void changePlayed(View view){
     	match.setPlayed(((ToggleButton) findViewById(R.id.match_played)).isChecked());
@@ -124,6 +147,11 @@ public class MatchActivity extends Activity{
     
     @Override
     protected void onPause(){
+        		progress = new ProgressDialog(this);
+        		progress.setTitle("Saving Results");
+        		progress.setMessage("Please wait while we sync your results");
+        		progress.show();
+            	new SyncMatchTask().execute();
     	DataHolder.getInstance().getTournament().store(getApplicationContext());
     	super.onPause();
     }
@@ -131,8 +159,7 @@ public class MatchActivity extends Activity{
     private class SyncMatchTask extends AsyncTask<Void, Void, Integer> {
     	
     	private String token;
-    	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    	SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
+
     	
 		@Override
 		protected Integer doInBackground(Void... params) {
@@ -141,10 +168,11 @@ public class MatchActivity extends Activity{
 			token = Config.getInstance().getToken();
 			String querystring = "token="+EscapeUtils.encodeURIComponent(token);
 			WSRequest request = new WSRequest(WSRequest.GET,"Match",String.valueOf(match.getExtId()),querystring,null);
+			TimeZone tz = TimeZone.getDefault();
+			int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;
 			int updated = 0;
 			try {
 				json = request.getJSON();
-				System.out.println(json);
 				if(json.getBoolean("success"))
 				{
 					if(json.has("last_updated"))
@@ -154,6 +182,7 @@ public class MatchActivity extends Activity{
 						{
 							Calendar lupd = Calendar.getInstance();
 							lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+							lupd.add(Calendar.HOUR_OF_DAY, offset);
 							updated = match.getLast_updated().compareTo(lupd);
 						}
 					}
@@ -168,6 +197,7 @@ public class MatchActivity extends Activity{
 							{
 								Calendar lupd = Calendar.getInstance();
 								lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+								lupd.add(Calendar.HOUR_OF_DAY, offset);
 								match.setLast_updated(lupd);
 							}
 						}
@@ -192,24 +222,76 @@ public class MatchActivity extends Activity{
 						result = -1;
 						break;
 					case 1:
-						JSONObject jsonPut = new JSONObject();
-						
-						jsonPut.put("token", token);
-						
-						JSONObject jMatch = new JSONObject();
-						jMatch.put("score_home",match.getHomeGoal());
-						jMatch.put("score_away",match.getAwayGoal());
-						jMatch.put("score_home",match.getHomeGoal());
-						jsonPut.put("match", jMatch);
+				        if (p>=1&&p<=2)
+				        {
+							JSONObject jsonPut = new JSONObject();
+							
+							jsonPut.put("token", token);
+							
+							JSONObject jMatch = new JSONObject();
+							jMatch.put("score_home",match.getHomeGoal());
+							jMatch.put("score_away",match.getAwayGoal());
+							jMatch.put("played", match.isPlayed());
+							jsonPut.put("match", jMatch);
 
-						WSRequest requestPut = new WSRequest(WSRequest.PUT,"Match",String.valueOf(match.getExtId()),null,jsonPut);
-							json = requestPut.getJSON();
-							System.out.println(json);
-							if (json.getBoolean("success"))
-								result = 1;
+							WSRequest requestPut = new WSRequest(WSRequest.PUT,"Match",String.valueOf(match.getExtId()),null,jsonPut);
+								json = requestPut.getJSON();
+								if (json.getBoolean("success"))
+								{
+									result = 1;
+									if(json.has("last_updated"))
+									{
+										String lastupdString = json.getString("last_updated");
+										if (!lastupdString.equals("null"))
+										{
+											Calendar lupd = Calendar.getInstance();
+											lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+											lupd.add(Calendar.HOUR_OF_DAY, offset);
+											match.setLast_updated(lupd);
+										}
+									}
+								}
+								else
+								{
+									result = 2;
+								}
+							break;
+				        }
+				        else
+				        {
+							if(json.has("last_updated"))
+							{
+								String lastupdString = json.getString("last_updated");
+								if (!lastupdString.equals("null"))
+								{
+									Calendar lupd = Calendar.getInstance();
+									lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+									lupd.add(Calendar.HOUR_OF_DAY, offset);
+									match.setLast_updated(lupd);
+								}
+							}
+							if(json.has("date"))
+							{
+								String dateString = json.getString("date");
+								if (!dateString.equals("null"))
+								{
+									Calendar date = Calendar.getInstance();
+									date.setTime(ISO8601DATEFORMAT.parse(dateString));
+									match.setDate(date);
+								}
+							}
+							match.setInfo(json.getString("info"));
+							match.setHomeGoal(json.getInt("score_home"));
+							match.setAwayGoal(json.getInt("score_away"));
+							if (json.getInt("played")==1)
+								match.setPlayed(true);
 							else
-								result = 2;
-						break;
+								match.setPlayed(false);
+							match.getTournament().store(getApplicationContext());
+							result = -1;
+							break;
+				        }
+
 					default:
 						break;
 					}
@@ -223,10 +305,11 @@ public class MatchActivity extends Activity{
 				return 2;
 			}
 		}
-		
+
 		
 		@Override
         protected void onPostExecute(Integer result) {
+				renderViews();
 				progress.dismiss();
 				switch (result)
 				{

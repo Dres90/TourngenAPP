@@ -117,7 +117,7 @@ public class TournamentActivity extends Activity{
     	}
     }
     
-    private void calcPositions() //TODO debug this code, not correct
+    private void calcPositions()
     {
     	positions = new ArrayList<Position>();
     	for (int i = 0; i<tournament.getFixtures().size();i++)
@@ -133,7 +133,7 @@ public class TournamentActivity extends Activity{
     				
     				int posHome = positionsContain(home);
     				Position homePosition;
-    				if (posHome==0)
+    				if (posHome==-1)
     				{
     					homePosition = new Position(home);
     					positions.add(homePosition);
@@ -142,7 +142,6 @@ public class TournamentActivity extends Activity{
     				{
     					homePosition = positions.get(posHome);
     				}
-    				System.out.println("Home position is " + posHome);
     				
     				if (match.getHomeGoal()>match.getAwayGoal())
     				{
@@ -163,7 +162,7 @@ public class TournamentActivity extends Activity{
     				
     				int posAway = positionsContain(away);
     				Position awayPosition;
-    				if (posAway==0)
+    				if (posAway==-1)
     				{
     					awayPosition = new Position(away);
     					positions.add(awayPosition);
@@ -172,7 +171,6 @@ public class TournamentActivity extends Activity{
     				{
     					awayPosition = positions.get(posAway);
     				}
-    				System.out.println("Away position is " + posAway);
     				
     				if (match.getAwayGoal()>match.getHomeGoal())
     				{
@@ -206,7 +204,7 @@ public class TournamentActivity extends Activity{
     			return i;
     		}
     	}
-    	return 0;
+    	return -1;
     }
     
     private class Position implements Comparable<Position>
@@ -276,11 +274,11 @@ public class TournamentActivity extends Activity{
 					if (favor==another.favor)
 						return 0;
 					else
-						return favor-another.favor;
+						return another.favor-favor;
 				else
-					return getDifference()-another.getDifference();	
+					return another.getDifference()-getDifference();	
 			else
-				return points-another.points;
+				return another.points-points;
 		}
     }
 }
