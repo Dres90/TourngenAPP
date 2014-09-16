@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.utils;
 
 import java.security.KeyStore;
 import org.apache.http.HttpVersion;

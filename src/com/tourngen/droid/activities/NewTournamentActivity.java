@@ -1,9 +1,12 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Tournament;
 
 import android.app.Activity;
 import android.app.DialogFragment;

@@ -1,7 +1,10 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.utils.WSRequest;
 
 import android.app.Activity;
 import android.app.AlertDialog;

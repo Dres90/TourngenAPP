@@ -1,7 +1,14 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 
 import java.util.ArrayList;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Fixture;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.objects.Team;
+import com.tourngen.droid.objects.Tournament;
+import com.tourngen.droid.utils.MatchGenerator;
 
 import android.app.Activity;
 import android.content.Intent;

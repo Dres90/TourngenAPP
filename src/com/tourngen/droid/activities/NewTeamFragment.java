@@ -1,4 +1,7 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Team;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;

@@ -69,4 +69,5 @@
 	<string name="dash">-</string>
 	<string name="tournament">Tournament</string>
 	<string name="edit_scores">Can Edit Scores</string>
+	<string name="send">Send</string>
 </resources>

@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.tourngen.droid.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,17 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TournamentListActivity"></activity>
-        <activity android:name=".SignupActivity"></activity>
-        <activity android:name=".TournamentActivity"></activity>
-        <activity android:name=".FixtureListActivity"></activity>
-        <activity android:name=".MatchListActivity"></activity>
-        <activity android:name=".TeamListActivity"></activity>
-        <activity android:name=".TeamActivity"></activity>
-        <activity android:name=".MatchActivity"></activity>
-        <activity android:name=".NewTournamentActivity"></activity>
-        <activity android:name=".AddTeamsActivity"></activity>
-        <activity android:name=".NewMatchesActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.AddTeamsActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.FixtureListActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.MatchActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.MatchListActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.NewMatchesActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.NewTournamentActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.SignupActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.TeamActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.TeamListActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.TournamentActivity"></activity>
+        <activity android:name="com.tourngen.droid.activities.TournamentListActivity"></activity>
     </application>
 
 </manifest>

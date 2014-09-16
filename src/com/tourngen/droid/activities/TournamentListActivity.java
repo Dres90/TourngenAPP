@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +9,16 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Fixture;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.objects.Team;
+import com.tourngen.droid.objects.Tournament;
+import com.tourngen.droid.utils.Config;
+import com.tourngen.droid.utils.DataHolder;
+import com.tourngen.droid.utils.EscapeUtils;
+import com.tourngen.droid.utils.WSRequest;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,7 +35,6 @@ import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TournamentListActivity extends Activity implements OnClickListener{
 
@@ -42,14 +51,7 @@ public class TournamentListActivity extends Activity implements OnClickListener{
     {
     	super.onResume();
     	setTitle(Config.getInstance().getUserName()+"'s Tournaments");
-    	if(WSRequest.isOnline(getApplicationContext()))
-    	{
-    		progress = new ProgressDialog(this);
-    		progress.setTitle("Loading Tournaments");
-    		progress.setMessage("Please wait while we get your tournaments");
-    		progress.show();
-    		new GetTournamentsTask().execute(Config.getInstance().getToken());
-    	}
+    	renderViews();
     }
 
     @Override
@@ -64,8 +66,14 @@ public class TournamentListActivity extends Activity implements OnClickListener{
         switch(id)
         {
         	case R.id.sync_button:
-        		System.out.println(Config.getInstance().getPrivileges());
-            	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
+            	if(WSRequest.isOnline(getApplicationContext()))
+            	{
+            		progress = new ProgressDialog(this);
+            		progress.setTitle("Loading Tournaments");
+            		progress.setMessage("Please wait while we get your tournaments");
+            		progress.show();
+            		new GetTournamentsTask().execute(Config.getInstance().getToken());
+            	}
                 return true;
         	case R.id.new_tournament_button:
         		Intent newTournamentIntent = new Intent(getApplicationContext(),NewTournamentActivity.class);
@@ -189,7 +197,7 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 						{
 							JSONObject jT = jsonTournaments.getJSONObject(i);
 							Tournament t = new Tournament(jT.getString("Name"));
-							t.setExtId(jT.getInt("Tournament_id"));
+							t.setExtId(jT.getInt("Tournament_id"),getApplicationContext());
 							int homeandaway = jT.getInt("Home_and_away");
 							if(homeandaway==1)
 								t.setHomeandaway(true);
@@ -241,14 +249,16 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 								t.setInfo(info);
 							}	
 							
+							t = getTeams(t);
+							t = getMatches(t);
+							t.store(getApplicationContext());
+							
 							if (!idList.contains(t.getExtId()))
 							{
 								Log.v("id list","Not contained");
 								Log.v("id",String.valueOf(t.getExtId()));
 								Log.v("name",t.getName());
-								t = getTeams(t);
-								t = getMatches(t);
-								t.store(getApplicationContext());
+
 							}
 
 
@@ -441,4 +451,6 @@ public class TournamentListActivity extends Activity implements OnClickListener{
         
     }
 
+        
+    
 }

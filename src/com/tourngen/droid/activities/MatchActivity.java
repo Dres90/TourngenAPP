@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,10 +10,18 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.utils.Config;
+import com.tourngen.droid.utils.DataHolder;
+import com.tourngen.droid.utils.EscapeUtils;
+import com.tourngen.droid.utils.WSRequest;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -147,11 +155,6 @@ public class MatchActivity extends Activity{
     
     @Override
     protected void onPause(){
-        		progress = new ProgressDialog(this);
-        		progress.setTitle("Saving Results");
-        		progress.setMessage("Please wait while we sync your results");
-        		progress.show();
-            	new SyncMatchTask().execute();
     	DataHolder.getInstance().getTournament().store(getApplicationContext());
     	super.onPause();
     }
@@ -173,6 +176,7 @@ public class MatchActivity extends Activity{
 			int updated = 0;
 			try {
 				json = request.getJSON();
+				Log.v("JSON",json.toString());
 				if(json.getBoolean("success"))
 				{
 					if(json.has("last_updated"))
@@ -300,9 +304,11 @@ public class MatchActivity extends Activity{
 				return 2;
 				
 			} catch (JSONException e) {
-				return 2;
+				e.printStackTrace();
+				return 3;
 			} catch (ParseException e) {
-				return 2;
+				e.printStackTrace();
+				return 4;
 			}
 		}
 
@@ -323,7 +329,7 @@ public class MatchActivity extends Activity{
 					Toast.makeText(getApplicationContext(), "Match data is up to date!", Toast.LENGTH_SHORT).show();
 					break;
 				default:
-					Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "Error! "+result, Toast.LENGTH_SHORT).show();
 					break;
 				}
 		}

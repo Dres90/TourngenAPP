@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +70,10 @@ public class WSRequest {
 	    	url=url+"?"+querystring;
 	    
 	    Log.v("URL",url);
+	    if (json != null)
+	    {
+	    	Log.v("JSON",json.toString());	
+	    }
 		switch(method)
 		{
 		case WSRequest.GET:

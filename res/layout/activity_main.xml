@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    tools:context="com.tourngen.droid.MainActivity"
+    tools:context="com.tourngen.droid.activities.MainActivity"
     tools:ignore="MergeRootFrame" >
 
     <EditText

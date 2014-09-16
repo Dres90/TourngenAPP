@@ -1,4 +1,9 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Team;
+import com.tourngen.droid.objects.Tournament;
+import com.tourngen.droid.utils.DataHolder;
 
 import android.app.Activity;
 import android.content.Intent;

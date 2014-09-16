@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.utils;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;

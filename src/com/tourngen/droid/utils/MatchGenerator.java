@@ -1,7 +1,12 @@
-package com.tourngen.droid;
+package com.tourngen.droid.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import com.tourngen.droid.objects.Fixture;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.objects.Team;
+import com.tourngen.droid.objects.Tournament;
 
 
 public class MatchGenerator {

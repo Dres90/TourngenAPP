@@ -1,5 +1,6 @@
-package com.tourngen.droid;
+package com.tourngen.droid.objects;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.tourngen.droid.utils.Config;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -17,7 +20,7 @@ public class Tournament implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	private String name;
 	private ArrayList<Team> teams;
 	private ArrayList<Fixture> fixtures;
@@ -36,8 +39,25 @@ public class Tournament implements Serializable{
 		return extId;
 	}
 
-	public void setExtId(int extId) {
+	public void setExtId(int extId, Context context) {
+		ArrayList<Integer> idList = Config.getInstance().getIds();
+		if (extId>-1&&idList.contains(this.extId))
+		{
+			int pos = idList.indexOf(this.extId);
+			idList.set(pos, extId);
+		}
+		String filename = "t"+this.extId;
+		File folder = context.getFilesDir();
+		filename=folder.getPath()+"/"+filename;
+		System.out.println(filename);
+		File myFile = new File(filename);
+		if(myFile.exists())
+		{
+			System.out.println("Exists");
+		    myFile.delete();
+		}
 		this.extId = extId;
+		this.store(context);
 	}
 
 	public Calendar getLast_updated() {

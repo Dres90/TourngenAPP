@@ -1,9 +1,11 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import com.tourngen.droid.R;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

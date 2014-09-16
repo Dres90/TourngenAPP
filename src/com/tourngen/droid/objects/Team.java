@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;

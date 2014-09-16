@@ -1,9 +1,15 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Fixture;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.objects.Tournament;
+import com.tourngen.droid.utils.DataHolder;
 
 import android.app.Activity;
 import android.content.Intent;

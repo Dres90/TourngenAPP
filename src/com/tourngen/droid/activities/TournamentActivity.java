@@ -1,4 +1,4 @@
-package com.tourngen.droid;
+package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -7,22 +7,38 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.tourngen.droid.R;
+import com.tourngen.droid.objects.Fixture;
+import com.tourngen.droid.objects.Match;
+import com.tourngen.droid.objects.Team;
+import com.tourngen.droid.objects.Tournament;
+import com.tourngen.droid.utils.Config;
+import com.tourngen.droid.utils.DataHolder;
+import com.tourngen.droid.utils.WSRequest;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TableRow;
-import android.widget.Toast;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TournamentActivity extends Activity{
 	
 	Tournament tournament;
 	ArrayList<Position> positions;
+	ProgressDialog progress;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +67,25 @@ public class TournamentActivity extends Activity{
         switch(id)
         {
         	case R.id.sync_button:
-            	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
+            	if(WSRequest.isOnline(getApplicationContext()))
+            	{
+            		progress = new ProgressDialog(this);
+            		if (tournament.getExtId()>0)
+            		{
+            			/*progress.setTitle("Syncing Tournament");
+                		progress.setMessage("Please wait while we synchronize your tournament");
+                		progress.show();
+                		new SendTournamentTask().execute(tournament);*/
+            		}
+            		else
+            		{
+            			progress.setTitle("Sending Tournament");
+                		progress.setMessage("Please wait while we send your tournament");
+                		progress.show();
+                		new SendTournamentTask().execute(tournament);
+            		}
+
+            	}
                 return true;	
         }
         return super.onOptionsItemSelected(item);
@@ -120,6 +154,12 @@ public class TournamentActivity extends Activity{
     private void calcPositions()
     {
     	positions = new ArrayList<Position>();
+    	ArrayList<Team> teams = tournament.getTeams();
+    	for(int i = 0; i<teams.size();i++)
+    	{
+			Position newPos = new Position(teams.get(i));
+			positions.add(newPos);
+    	}
     	for (int i = 0; i<tournament.getFixtures().size();i++)
     	{
     		Fixture fixture = tournament.getFixtures().get(i);
@@ -188,7 +228,6 @@ public class TournamentActivity extends Activity{
     				awayPosition.addPlayed(1);
     				awayPosition.addFavor(match.getAwayGoal());
     				awayPosition.addAgainst(match.getHomeGoal());
-    				
     			}
     		}
     	}
@@ -279,6 +318,170 @@ public class TournamentActivity extends Activity{
 					return another.getDifference()-getDifference();	
 			else
 				return another.points-points;
+		}
+    }
+    private class SendTournamentTask extends AsyncTask<Tournament, Void, Integer> {
+    	
+    	private String token;
+    	//private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+		//SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
+		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    	
+		@Override
+		protected Integer doInBackground(Tournament... params) {
+			
+			try {
+				JSONObject jTournament = new JSONObject();
+				JSONObject json;
+				token = Config.getInstance().getToken();
+				jTournament.put("token",token);
+				addIds();
+				jTournament.put("name", tournament.getName());
+				jTournament.put("date_start", simpleDate.format(tournament.getStartDate().getTime()));
+				jTournament.put("date_end", simpleDate.format(tournament.getEndDate().getTime()));
+				jTournament.put("home_and_away",tournament.isHomeandaway());
+				jTournament.put("is_public",tournament.isIspublic());
+				jTournament.put("info",tournament.getInfo());
+				JSONArray jTeams = new JSONArray();
+				ArrayList<Team> teams = tournament.getTeams();
+				for (int i = 0; i<teams.size(); i++)
+				{
+					Team team = teams.get(i);
+					JSONObject jTeam = new JSONObject();
+					jTeam.put("name",team.getName());
+					jTeam.put("id", team.getExtId());
+					jTeam.put("email", team.getEmail());
+					jTeam.put("info", team.getInfo());
+					jTeams.put(jTeam);
+				}
+				jTournament.put("teams", jTeams);
+				
+				JSONArray jFixtures = new JSONArray();
+				ArrayList<Fixture> fixtures = tournament.getFixtures();
+				for (int i = 0; i<fixtures.size(); i++)
+				{
+					Fixture fixture = fixtures.get(i);
+					JSONObject jFixture = new JSONObject();
+					jFixture.put("number",fixture.getNumber());
+					jFixture.put("id", fixture.getExtId());
+					jFixture.put("info", fixture.getInfo());
+					JSONArray jMatches = new JSONArray();
+					
+					ArrayList<Match> matches = fixture.getMatches();
+					for (int j = 0; j<matches.size(); j++)
+					{
+						Match match = matches.get(j);
+						JSONObject jMatch = new JSONObject();
+						jMatch.put("id", match.getExtId());
+						jMatch.put("home",match.getHome().getExtId());
+						jMatch.put("away",match.getAway().getExtId());
+						jMatch.put("score_home", match.getHomeGoal());
+						jMatch.put("score_away",match.getAwayGoal());
+						jMatch.put("date",simpleDate.format(match.getDate().getTime()));
+						jMatch.put("info",match.getInfo());
+						jMatch.put("played",match.isPlayed());
+						jMatches.put(jMatch);
+					}
+					jFixture.put("matches", jMatches);
+					jFixtures.put(jFixture);
+				}
+				jTournament.put("teams", jTeams);
+				jTournament.put("fixtures", jFixtures);
+				
+
+				WSRequest request = new WSRequest(WSRequest.POST,"Tournament",null,null,jTournament);
+				
+				json = request.getJSON();
+				
+				System.out.println(json);
+				if (json.getBoolean("success"))
+				{
+					setIds(json);
+					return 1;
+				}
+				else
+					return 0;
+				
+			} catch (JSONException e) {
+				return null;
+			}
+		}
+		
+		
+		@Override
+        protected void onPostExecute(Integer result) {
+			if (result==1)
+    			Toast.makeText(getApplicationContext(), "Tournament Send Success", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(getApplicationContext(), "Tournament Send Error", Toast.LENGTH_SHORT).show();
+			
+			progress.dismiss();
+		}
+		
+		private void addIds()
+		{
+			ArrayList<Team> teams = tournament.getTeams();
+			for (int i = 0 ; i <teams.size() ; i++)
+			{
+				teams.get(i).setExtId(i);
+			}
+			
+			ArrayList<Fixture> fixtures = tournament.getFixtures();
+			for (int i = 0 ; i <fixtures.size() ; i++)
+			{
+				Fixture fixture = fixtures.get(i);
+				fixture.setExtId(i);
+				ArrayList<Match> matches = fixture.getMatches();
+				for (int j = 0; j < matches.size(); j++)
+				{
+					matches.get(j).setExtId(i*matches.size()+j);
+				}
+			}
+		}
+		
+		private void setIds(JSONObject json)
+		{
+			try 
+			{
+				tournament.setExtId(json.getInt("tournament"),getApplicationContext());
+				ArrayList<Team> teams = tournament.getTeams();
+				JSONObject jTeams = json.getJSONObject("teams");
+				for (int i = 0 ; i <teams.size() ; i++)
+				{
+					Team team = teams.get(i);
+					team.setExtId(getId(jTeams,team.getExtId()));
+				}
+				JSONObject jFixtures = json.getJSONObject("fixtures");
+				JSONObject jMatches = json.getJSONObject("matches");
+				ArrayList<Fixture> fixtures = tournament.getFixtures();
+				for (int i = 0 ; i <fixtures.size() ; i++)
+				{
+					Fixture fixture = fixtures.get(i);
+					fixture.setExtId(getId(jFixtures,fixture.getExtId()));
+					ArrayList<Match> matches = fixture.getMatches();
+					for (int j = 0; j < matches.size(); j++)
+					{
+						Match match = matches.get(j); 
+						match.setExtId(getId(jMatches,match.getExtId()));
+					}
+				}
+			} catch (JSONException e) 
+			{
+				e.printStackTrace();
+			}
+
+		}
+		
+		private int getId(JSONObject dict, int localId) throws JSONException
+		{
+			JSONArray keys = dict.getJSONArray("Keys");
+			JSONArray values = dict.getJSONArray("Values");
+			for(int i=0; i<keys.length();i++)
+			{
+				if (localId==keys.getInt(i))
+					return values.getInt(i);
+			}
+			return -1;
 		}
     }
 }
