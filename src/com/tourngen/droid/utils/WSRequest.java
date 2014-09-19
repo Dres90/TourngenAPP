@@ -209,7 +209,16 @@ public class WSRequest {
 	        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    if (netInfo != null && netInfo.isConnected()) {
-	        return true;
+	    	WSRequest request = new WSRequest(WSRequest.GET,"",null,null,null);
+	    	try {
+				JSONObject jSON = request.getJSON();
+				if (jSON.has("status")&&jSON.getInt("status")==1)
+					return true;
+				else
+					return false;
+			} catch (JSONException e) {
+				return false;
+			}
 	    }
 	    return false;
 	}
