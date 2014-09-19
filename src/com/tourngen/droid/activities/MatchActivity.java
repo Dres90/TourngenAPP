@@ -15,6 +15,7 @@ import com.tourngen.droid.objects.Match;
 import com.tourngen.droid.utils.Config;
 import com.tourngen.droid.utils.DataHolder;
 import com.tourngen.droid.utils.EscapeUtils;
+import com.tourngen.droid.utils.SyncUtils;
 import com.tourngen.droid.utils.WSRequest;
 
 import android.app.Activity;
@@ -228,37 +229,14 @@ public class MatchActivity extends Activity{
 					case 1:
 				        if (p>=1&&p<=2)
 				        {
-							JSONObject jsonPut = new JSONObject();
-							
-							jsonPut.put("token", token);
-							
-							JSONObject jMatch = new JSONObject();
-							jMatch.put("score_home",match.getHomeGoal());
-							jMatch.put("score_away",match.getAwayGoal());
-							jMatch.put("played", match.isPlayed());
-							jsonPut.put("match", jMatch);
-
-							WSRequest requestPut = new WSRequest(WSRequest.PUT,"Match",String.valueOf(match.getExtId()),null,jsonPut);
-								json = requestPut.getJSON();
-								if (json.getBoolean("success"))
-								{
-									result = 1;
-									if(json.has("last_updated"))
-									{
-										String lastupdString = json.getString("last_updated");
-										if (!lastupdString.equals("null"))
-										{
-											Calendar lupd = Calendar.getInstance();
-											lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
-											lupd.add(Calendar.HOUR_OF_DAY, offset);
-											match.setLast_updated(lupd);
-										}
-									}
-								}
-								else
-								{
-									result = 2;
-								}
+				        	if(SyncUtils.sendMatch(match.getTournament(), match.getExtId()))
+				        	{
+				        		result = 1;
+				        	}
+				        	else
+							{
+								result = 2;
+							}
 							break;
 				        }
 				        else

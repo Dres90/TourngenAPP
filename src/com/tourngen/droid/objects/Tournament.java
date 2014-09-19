@@ -205,6 +205,25 @@ public class Tournament implements Serializable{
 		return name;
 	}
 	
+	public void setAllLastUpdated(Calendar cal)
+	{
+		this.setLast_updated(cal);
+		ArrayList<Team> teams = this.getTeams();
+		for (int i=0;i<teams.size();i++){
+			teams.get(i).setLast_updated(cal);
+		}
+		ArrayList<Fixture> fixtures = this.getFixtures();
+		for (int i=0; i<fixtures.size(); i++)
+		{
+			Fixture fixture = fixtures.get(i);
+			fixture.setLast_updated(cal);
+			ArrayList<Match> matches = fixture.getMatches();
+			for (int j=0; j<matches.size(); j++)
+			{
+				matches.get(j).setLast_updated(cal);
+			}
+		}
+	}
 	
 	public boolean store(Context context)
 	{

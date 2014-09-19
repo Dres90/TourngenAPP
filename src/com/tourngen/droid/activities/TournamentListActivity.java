@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,6 +164,8 @@ public class TournamentListActivity extends Activity implements OnClickListener{
     	
     	private String token;
     	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+		TimeZone tz = TimeZone.getDefault();
+		int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;
     	
 		@Override
 		protected Integer doInBackground(String... params) {
@@ -240,6 +243,7 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 								{
 									Calendar lupd = Calendar.getInstance();
 									lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+									lupd.add(Calendar.HOUR_OF_DAY, offset);
 									t.setLast_updated(lupd);
 								}
 							}
@@ -302,6 +306,7 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 							{
 								Calendar lupd = Calendar.getInstance();
 								lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+								lupd.add(Calendar.HOUR_OF_DAY, offset);
 								t.setLast_updated(lupd);
 							}
 						}
@@ -357,6 +362,7 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 							{
 								Calendar lupd = Calendar.getInstance();
 								lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+								lupd.add(Calendar.HOUR_OF_DAY, offset);
 								f.setLast_updated(lupd);
 							}
 						}
@@ -409,13 +415,14 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 						else
 							m.setPlayed(false);
 						SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
-						if (jM.has("Last_updated"))
+						if (jM.has("last_updated"))
 						{
-							String lastupdString = jM.getString("Last_updated");
+							String lastupdString = jM.getString("last_updated");
 							if (!lastupdString.equals("null"))
 							{
 								Calendar lupd = Calendar.getInstance();
 								lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+								lupd.add(Calendar.HOUR_OF_DAY, offset);
 								m.setLast_updated(lupd);
 							}
 						}

@@ -1,11 +1,13 @@
 package com.tourngen.droid.activities;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +20,7 @@ import com.tourngen.droid.objects.Team;
 import com.tourngen.droid.objects.Tournament;
 import com.tourngen.droid.utils.Config;
 import com.tourngen.droid.utils.DataHolder;
+import com.tourngen.droid.utils.SyncUtils;
 import com.tourngen.droid.utils.WSRequest;
 
 import android.app.Activity;
@@ -72,10 +75,10 @@ public class TournamentActivity extends Activity{
             		progress = new ProgressDialog(this);
             		if (tournament.getExtId()>0)
             		{
-            			/*progress.setTitle("Syncing Tournament");
+            			progress.setTitle("Syncing Tournament");
                 		progress.setMessage("Please wait while we synchronize your tournament");
                 		progress.show();
-                		new SendTournamentTask().execute(tournament);*/
+                		new SyncTournamentTask().execute(tournament);
             		}
             		else
             		{
@@ -323,8 +326,6 @@ public class TournamentActivity extends Activity{
     private class SendTournamentTask extends AsyncTask<Tournament, Void, Integer> {
     	
     	private String token;
-    	//private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-		//SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     	
 		@Override
@@ -404,6 +405,8 @@ public class TournamentActivity extends Activity{
 				
 			} catch (JSONException e) {
 				return null;
+			} catch (ParseException e) {
+				return null;
 			}
 		}
 		
@@ -439,12 +442,27 @@ public class TournamentActivity extends Activity{
 			}
 		}
 		
-		private void setIds(JSONObject json)
+		private void setIds(JSONObject json) throws ParseException
 		{
+			String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+			SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
+			TimeZone tz = TimeZone.getDefault();
+			int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;
 			try 
 			{
 				tournament.setExtId(json.getInt("tournament"),getApplicationContext());
 				ArrayList<Team> teams = tournament.getTeams();
+				if(json.has("last_updated"))
+				{
+					String lastupdString = json.getString("last_updated");
+					if (!lastupdString.equals("null"))
+					{
+						Calendar lupd = Calendar.getInstance();
+						lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+						lupd.add(Calendar.HOUR_OF_DAY, offset);
+						tournament.setAllLastUpdated(lupd);
+					}
+				}
 				JSONObject jTeams = json.getJSONObject("teams");
 				for (int i = 0 ; i <teams.size() ; i++)
 				{
@@ -484,4 +502,134 @@ public class TournamentActivity extends Activity{
 			return -1;
 		}
     }
+    
+    private class SyncTournamentTask extends AsyncTask<Tournament, Void, Integer> {
+    	
+    	private String token;
+		private String dateFormat1 = "yyyy-MM-dd HH:mm:ss.SSS";
+		SimpleDateFormat sendFormat = new SimpleDateFormat(dateFormat1, Locale.US);
+		TimeZone tz = TimeZone.getDefault();
+		int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;
+    	
+		@Override
+		protected Integer doInBackground(Tournament... params) {
+			
+			try {
+
+				WSRequest request = new WSRequest(WSRequest.POST,"Tournament",String.valueOf(tournament.getExtId()),null,getUpdatedJSON(tournament));
+				JSONObject json;
+				json = request.getJSON();
+				System.out.println(json);
+				if (json.getBoolean("success"))
+				{
+					if (tournament.getPrivilege()==1&&json.getInt("status")==2)
+					{
+						SyncUtils.sendTournament(tournament);
+							
+					}
+					else if (json.getInt("status")==1)
+					{
+						SyncUtils.getTournament(tournament);
+					}
+					JSONArray jTeams = json.getJSONArray("teams");
+					for (int i=0; i < jTeams.length(); i++)
+					{
+						JSONObject jTeam = jTeams.getJSONObject(i);
+						if (jTeam.getInt("status")==1)
+							SyncUtils.getTeam(tournament,jTeam.getInt("id"));
+					}
+					JSONArray jFixtures = json.getJSONArray("fixtures");
+					for (int i=0; i < jFixtures.length(); i++)
+					{
+						JSONObject jFixture = jFixtures.getJSONObject(i);
+						if (jFixture.getInt("status")==1)
+							SyncUtils.getFixture(tournament,jFixture.getInt("id"));
+					}
+					JSONArray jMatches = json.getJSONArray("matches");
+					for (int i=0; i < jMatches.length(); i++)
+					{
+						JSONObject jMatch = jMatches.getJSONObject(i);
+						if (tournament.getPrivilege()==1&&jMatch.getInt("status")==2)
+							SyncUtils.sendMatch(tournament, jMatch.getInt("id"));
+						else if (jMatch.getInt("status")==1)
+							SyncUtils.getMatch(tournament,jMatch.getInt("id"));
+					}
+					return 1;
+				}
+				return 0;
+			} catch (JSONException e) {
+				return null;
+			} catch (ParseException e) {
+				return null;
+			}
+		}
+		
+		
+		@Override
+        protected void onPostExecute(Integer result) {
+			if (result==1)
+    			Toast.makeText(getApplicationContext(), "Tournament Sync Success", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(getApplicationContext(), "Tournament Sync Error", Toast.LENGTH_SHORT).show();
+			
+			progress.dismiss();
+		}
+		
+		private JSONObject getUpdatedJSON(Tournament tournament) throws JSONException
+		{
+			JSONObject jSONrequest = new JSONObject();
+			token = Config.getInstance().getToken();
+			jSONrequest.put("token",token);
+			JSONObject jTournament =  new JSONObject();
+			jTournament.put("updated", getRemoteTimeString(tournament.getLast_updated()));
+			JSONArray jTeams = new JSONArray();
+			ArrayList<Team> teams = tournament.getTeams();
+			for (int i = 0; i<teams.size(); i++)
+			{
+				Team team = teams.get(i);
+				JSONObject jTeam = new JSONObject();
+				jTeam.put("id", team.getExtId());
+				jTeam.put("updated", getRemoteTimeString(team.getLast_updated()));
+				jTeams.put(jTeam);
+			}
+			jTournament.put("teams", jTeams);
+			
+			JSONArray jFixtures = new JSONArray();
+			ArrayList<Fixture> fixtures = tournament.getFixtures();
+			JSONArray jMatches = new JSONArray();
+			for (int i = 0; i<fixtures.size(); i++)
+			{
+				Fixture fixture = fixtures.get(i);
+				JSONObject jFixture = new JSONObject();
+				jFixture.put("id", fixture.getExtId());
+				jFixture.put("updated", getRemoteTimeString(fixture.getLast_updated()));
+				ArrayList<Match> matches = fixture.getMatches();
+				for (int j = 0; j<matches.size(); j++)
+				{
+					Match match = matches.get(j);
+					JSONObject jMatch = new JSONObject();
+					jMatch.put("id", match.getExtId());
+					jMatch.put("updated", getRemoteTimeString(match.getLast_updated()));
+					jMatches.put(jMatch);
+				}
+				jFixtures.put(jFixture);
+			}
+			jTournament.put("teams", jTeams);
+			jTournament.put("fixtures", jFixtures);
+			jTournament.put("matches", jMatches);
+			jSONrequest.put("tournament", jTournament);
+			System.out.println(jSONrequest);
+			return jSONrequest;
+		}
+		
+		private String getRemoteTimeString(Calendar cal)
+		{
+			Calendar lupd = Calendar.getInstance();
+			lupd.setTime(cal.getTime());
+			lupd.add(Calendar.HOUR_OF_DAY, -offset);
+			return sendFormat.format(lupd.getTime());
+		}
+		
+    }
+
 }
