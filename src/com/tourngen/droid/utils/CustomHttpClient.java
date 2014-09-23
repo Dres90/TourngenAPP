@@ -17,8 +17,8 @@ import org.apache.http.params.HttpProtocolParams;
 
 public class CustomHttpClient {
 	
-	private static final int TIMEOUT = 0;
-	private static final int HTTPS_PORT = 8080;
+	private static final int TIMEOUT = 5000;
+	public static final int HTTPS_PORT = 8080;
 	
 	public static HttpClient getHttpClient() {
 
@@ -58,9 +58,11 @@ public class CustomHttpClient {
 	                new AuthScope(null, -1),
 	                new UsernamePasswordCredentials(mUsername, mPassword));*/
 
-	    } catch (Exception e) {
+	    }
+	    catch (Exception e) {
 	        client = new DefaultHttpClient();
 	    }
+	    
 
 	    return client;
 

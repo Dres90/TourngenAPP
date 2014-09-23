@@ -36,6 +36,7 @@ import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TournamentListActivity extends Activity implements OnClickListener{
 
@@ -67,14 +68,11 @@ public class TournamentListActivity extends Activity implements OnClickListener{
         switch(id)
         {
         	case R.id.sync_button:
-            	if(WSRequest.isOnline(getApplicationContext()))
-            	{
-            		progress = new ProgressDialog(this);
-            		progress.setTitle("Loading Tournaments");
-            		progress.setMessage("Please wait while we get your tournaments");
-            		progress.show();
-            		new GetTournamentsTask().execute(Config.getInstance().getToken());
-            	}
+           		progress = new ProgressDialog(this);
+        		progress.setTitle("Loading Tournaments");
+        		progress.setMessage("Please wait while we get your tournaments");
+        		progress.show();
+        		new GetTournamentsTask().execute(Config.getInstance().getToken());
                 return true;
         	case R.id.new_tournament_button:
         		Intent newTournamentIntent = new Intent(getApplicationContext(),NewTournamentActivity.class);
@@ -178,15 +176,27 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 				getTournaments(json);
 				return 1;
 			} catch (JSONException e) {
-				return null;
+				return 0;
 			}
 		}
 		
 		
 		@Override
         protected void onPostExecute(Integer result) {
-				renderViews();
-				progress.dismiss();
+			switch (result)
+			{
+			case 1:
+				Toast.makeText(getApplicationContext(), "Tournaments Loaded Successfully", Toast.LENGTH_SHORT).show();
+				break;
+			case 0:
+				Toast.makeText(getApplicationContext(), "Tournaments Load Error", Toast.LENGTH_SHORT).show();
+				break;
+			case -1:
+				Toast.makeText(getApplicationContext(), "Connection problem, please try again later", Toast.LENGTH_LONG).show();
+				break;
+			}
+			renderViews();
+			progress.dismiss();
 		}
 		
 		private void getTournaments(JSONObject json)

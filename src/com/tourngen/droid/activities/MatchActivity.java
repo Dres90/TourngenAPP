@@ -176,25 +176,12 @@ public class MatchActivity extends Activity{
 			int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;
 			int updated = 0;
 			try {
-				json = request.getJSON();
-				Log.v("JSON",json.toString());
-				if(json.getBoolean("success"))
+				if (WSRequest.isOnline(getApplicationContext()))
 				{
-					if(json.has("last_updated"))
+					json = request.getJSON();
+					Log.v("JSON",json.toString());
+					if(json.getBoolean("success"))
 					{
-						String lastupdString = json.getString("last_updated");
-						if (!lastupdString.equals("null"))
-						{
-							Calendar lupd = Calendar.getInstance();
-							lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
-							lupd.add(Calendar.HOUR_OF_DAY, offset);
-							updated = match.getLast_updated().compareTo(lupd);
-						}
-					}
-					int result = 0;
-					switch (updated)
-					{
-					case -1:
 						if(json.has("last_updated"))
 						{
 							String lastupdString = json.getString("last_updated");
@@ -203,44 +190,13 @@ public class MatchActivity extends Activity{
 								Calendar lupd = Calendar.getInstance();
 								lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
 								lupd.add(Calendar.HOUR_OF_DAY, offset);
-								match.setLast_updated(lupd);
+								updated = match.getLast_updated().compareTo(lupd);
 							}
 						}
-						if(json.has("date"))
+						int result = 0;
+						switch (updated)
 						{
-							String dateString = json.getString("date");
-							if (!dateString.equals("null"))
-							{
-								Calendar date = Calendar.getInstance();
-								date.setTime(ISO8601DATEFORMAT.parse(dateString));
-								match.setDate(date);
-							}
-						}
-						match.setInfo(json.getString("info"));
-						match.setHomeGoal(json.getInt("score_home"));
-						match.setAwayGoal(json.getInt("score_away"));
-						if (json.getInt("played")==1)
-							match.setPlayed(true);
-						else
-							match.setPlayed(false);
-						match.getTournament().store(getApplicationContext());
-						result = -1;
-						break;
-					case 1:
-				        if (p>=1&&p<=2)
-				        {
-				        	if(SyncUtils.sendMatch(match.getTournament(), match.getExtId()))
-				        	{
-				        		result = 1;
-				        	}
-				        	else
-							{
-								result = 2;
-							}
-							break;
-				        }
-				        else
-				        {
+						case -1:
 							if(json.has("last_updated"))
 							{
 								String lastupdString = json.getString("last_updated");
@@ -272,20 +228,65 @@ public class MatchActivity extends Activity{
 							match.getTournament().store(getApplicationContext());
 							result = -1;
 							break;
-				        }
+						case 1:
+					        if (p>=1&&p<=2)
+					        {
+					        	if(SyncUtils.sendMatch(match.getTournament(), match.getExtId()))
+					        	{
+					        		result = 1;
+					        	}
+					        	else
+								{
+									result = 2;
+								}
+								break;
+					        }
+					        else
+					        {
+								if(json.has("last_updated"))
+								{
+									String lastupdString = json.getString("last_updated");
+									if (!lastupdString.equals("null"))
+									{
+										Calendar lupd = Calendar.getInstance();
+										lupd.setTime(ISO8601DATEFORMAT.parse(lastupdString));
+										lupd.add(Calendar.HOUR_OF_DAY, offset);
+										match.setLast_updated(lupd);
+									}
+								}
+								if(json.has("date"))
+								{
+									String dateString = json.getString("date");
+									if (!dateString.equals("null"))
+									{
+										Calendar date = Calendar.getInstance();
+										date.setTime(ISO8601DATEFORMAT.parse(dateString));
+										match.setDate(date);
+									}
+								}
+								match.setInfo(json.getString("info"));
+								match.setHomeGoal(json.getInt("score_home"));
+								match.setAwayGoal(json.getInt("score_away"));
+								if (json.getInt("played")==1)
+									match.setPlayed(true);
+								else
+									match.setPlayed(false);
+								match.getTournament().store(getApplicationContext());
+								result = -1;
+								break;
+					        }
 
-					default:
-						break;
-					}
-					return result;
+						default:
+							break;
+						}
+						return result;
 				}
-				return 2;
-				
+				return -3;
+			}
+			else return -2;
 			} catch (JSONException e) {
-				e.printStackTrace();
 				return 3;
 			} catch (ParseException e) {
-				e.printStackTrace();
 				return 4;
 			}
 		}
@@ -305,6 +306,9 @@ public class MatchActivity extends Activity{
 					break;
 				case 0:
 					Toast.makeText(getApplicationContext(), "Match data is up to date!", Toast.LENGTH_SHORT).show();
+					break;
+				case -2:
+					Toast.makeText(getApplicationContext(), "Connection problem, please try again later", Toast.LENGTH_LONG).show();
 					break;
 				default:
 					Toast.makeText(getApplicationContext(), "Error! "+result, Toast.LENGTH_SHORT).show();

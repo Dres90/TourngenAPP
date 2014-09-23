@@ -38,12 +38,12 @@ public class WSRequest {
 	public static final int FIXTURE = 3;
 	public static final int MATCH = 4;
 	
+	private static final int port = CustomHttpClient.HTTPS_PORT;
 	private int method;
 	private String entity;
 	private String identifier;
 	private String querystring;
-	private JSONObject json;
-	
+	private JSONObject json;	 
 	
 	public WSRequest(int method, String entity, String identifier, String querystring, JSONObject json)
 	{
@@ -63,7 +63,9 @@ public class WSRequest {
 		
 		client = CustomHttpClient.getHttpClient();
 		builder = new StringBuilder();
-	    url = "https://tourngen.com:8080/"+entity+"/";
+	    url = "https://tourngen.com:"+port+"/";
+	    if (entity!=null)
+	       	url=url+entity+"/";
 	    if (identifier!=null)
 	    	url=url+identifier;
 	    if (querystring!=null)
@@ -98,7 +100,7 @@ public class WSRequest {
 		        	  System.out.println(String.valueOf(statusCode));
 		          }
 		      } catch (ClientProtocolException e) {
-		        e.printStackTrace();
+		    	e.printStackTrace();
 		      } catch (IOException e) {
 		        e.printStackTrace();
 		      }
@@ -205,22 +207,43 @@ public class WSRequest {
 	}
 	
 	public static boolean isOnline(Context context) {
-	    ConnectivityManager cm =
-	        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    if (netInfo != null && netInfo.isConnected()) {
-	    	WSRequest request = new WSRequest(WSRequest.GET,"",null,null,null);
-	    	try {
-				JSONObject jSON = request.getJSON();
-				if (jSON.has("status")&&jSON.getInt("status")==1)
-					return true;
-				else
+	    	
+			StringBuilder builder;
+			HttpClient client;
+			String url;
+			client = CustomHttpClient.getHttpClient();
+			builder = new StringBuilder();
+		    url = "https://tourngen.com:"+port+"/";
+ 		    HttpGet httpGet = new HttpGet(url);
+			try {
+		        HttpResponse response = client.execute(httpGet);
+		        StatusLine statusLine = response.getStatusLine();
+		        int statusCode = statusLine.getStatusCode();
+		        if (statusCode == 200) {
+		          HttpEntity entity = response.getEntity();
+		          InputStream content = entity.getContent();
+		          BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+		          String line;
+		          while ((line = reader.readLine()) != null) {
+		            builder.append(line);
+		          }
+					JSONObject jSON = new JSONObject(builder.toString());
+					if (jSON.has("status")&&jSON.getInt("status")==1)
+						return true;
+					else
+						return false;
+		        }
+		          else
+		          {
+		        	  System.out.println(String.valueOf(statusCode));
+		          }
+		      } catch (Exception e) {
 					return false;
-			} catch (JSONException e) {
-				return false;
+				}
 			}
-	    }
 	    return false;
 	}
-
 }

@@ -70,26 +70,22 @@ public class TournamentActivity extends Activity{
         switch(id)
         {
         	case R.id.sync_button:
-            	if(WSRequest.isOnline(getApplicationContext()))
-            	{
-            		progress = new ProgressDialog(this);
-            		if (tournament.getExtId()>0)
-            		{
-            			progress.setTitle("Syncing Tournament");
-                		progress.setMessage("Please wait while we synchronize your tournament");
-                		progress.show();
-                		new SyncTournamentTask().execute(tournament);
-            		}
-            		else
-            		{
-            			progress.setTitle("Sending Tournament");
-                		progress.setMessage("Please wait while we send your tournament");
-                		progress.show();
-                		new SendTournamentTask().execute(tournament);
-            		}
-
-            	}
-                return true;	
+        		progress = new ProgressDialog(this);
+        		if (tournament.getExtId()>0)
+        		{
+        			progress.setTitle("Syncing Tournament");
+            		progress.setMessage("Please wait while we synchronize your tournament");
+            		progress.show();
+            		new SyncTournamentTask().execute(tournament);
+        		}
+        		else
+        		{
+        			progress.setTitle("Sending Tournament");
+            		progress.setMessage("Please wait while we send your tournament");
+            		progress.show();
+            		new SendTournamentTask().execute(tournament);
+        		}
+               return true;	
         }
         return super.onOptionsItemSelected(item);
     }
@@ -332,6 +328,8 @@ public class TournamentActivity extends Activity{
 		protected Integer doInBackground(Tournament... params) {
 			
 			try {
+				if (WSRequest.isOnline(getApplicationContext()))
+				{
 				JSONObject jTournament = new JSONObject();
 				JSONObject json;
 				token = Config.getInstance().getToken();
@@ -402,6 +400,8 @@ public class TournamentActivity extends Activity{
 				}
 				else
 					return 0;
+				}
+				else return -1;
 				
 			} catch (JSONException e) {
 				return null;
@@ -413,11 +413,18 @@ public class TournamentActivity extends Activity{
 		
 		@Override
         protected void onPostExecute(Integer result) {
-			if (result==1)
-    			Toast.makeText(getApplicationContext(), "Tournament Send Success", Toast.LENGTH_SHORT).show();
-			else
+			switch (result)
+			{
+			case 1:
+				Toast.makeText(getApplicationContext(), "Tournament Send Success", Toast.LENGTH_SHORT).show();
+				break;
+			case 0:
 				Toast.makeText(getApplicationContext(), "Tournament Send Error", Toast.LENGTH_SHORT).show();
-			
+				break;
+			case -1:
+				Toast.makeText(getApplicationContext(), "Connection problem, please try again later", Toast.LENGTH_LONG).show();
+				break;
+			}
 			progress.dismiss();
 		}
 		
@@ -515,48 +522,54 @@ public class TournamentActivity extends Activity{
 		protected Integer doInBackground(Tournament... params) {
 			
 			try {
-
-				WSRequest request = new WSRequest(WSRequest.POST,"Tournament",String.valueOf(tournament.getExtId()),null,getUpdatedJSON(tournament));
-				JSONObject json;
-				json = request.getJSON();
-				System.out.println(json);
-				if (json.getBoolean("success"))
+				
+				if (WSRequest.isOnline(getApplicationContext()))
 				{
-					if (tournament.getPrivilege()==1&&json.getInt("status")==2)
+					WSRequest request = new WSRequest(WSRequest.POST,"Tournament",String.valueOf(tournament.getExtId()),null,getUpdatedJSON(tournament));
+					JSONObject json;
+					json = request.getJSON();
+					System.out.println(json);
+					if (json.getBoolean("success"))
 					{
-						SyncUtils.sendTournament(tournament);
-							
+						if (tournament.getPrivilege()==1&&json.getInt("status")==2)
+						{
+							SyncUtils.sendTournament(tournament);
+								
+						}
+						else if (json.getInt("status")==1)
+						{
+							SyncUtils.getTournament(tournament);
+						}
+						JSONArray jTeams = json.getJSONArray("teams");
+						for (int i=0; i < jTeams.length(); i++)
+						{
+							JSONObject jTeam = jTeams.getJSONObject(i);
+							if (jTeam.getInt("status")==1)
+								SyncUtils.getTeam(tournament,jTeam.getInt("id"));
+						}
+						JSONArray jFixtures = json.getJSONArray("fixtures");
+						for (int i=0; i < jFixtures.length(); i++)
+						{
+							JSONObject jFixture = jFixtures.getJSONObject(i);
+							if (jFixture.getInt("status")==1)
+								SyncUtils.getFixture(tournament,jFixture.getInt("id"));
+						}
+						JSONArray jMatches = json.getJSONArray("matches");
+						for (int i=0; i < jMatches.length(); i++)
+						{
+							JSONObject jMatch = jMatches.getJSONObject(i);
+							if (tournament.getPrivilege()==1&&jMatch.getInt("status")==2)
+								SyncUtils.sendMatch(tournament, jMatch.getInt("id"));
+							else if (jMatch.getInt("status")==1)
+								SyncUtils.getMatch(tournament,jMatch.getInt("id"));
+						}
+						return 1;
 					}
-					else if (json.getInt("status")==1)
-					{
-						SyncUtils.getTournament(tournament);
-					}
-					JSONArray jTeams = json.getJSONArray("teams");
-					for (int i=0; i < jTeams.length(); i++)
-					{
-						JSONObject jTeam = jTeams.getJSONObject(i);
-						if (jTeam.getInt("status")==1)
-							SyncUtils.getTeam(tournament,jTeam.getInt("id"));
-					}
-					JSONArray jFixtures = json.getJSONArray("fixtures");
-					for (int i=0; i < jFixtures.length(); i++)
-					{
-						JSONObject jFixture = jFixtures.getJSONObject(i);
-						if (jFixture.getInt("status")==1)
-							SyncUtils.getFixture(tournament,jFixture.getInt("id"));
-					}
-					JSONArray jMatches = json.getJSONArray("matches");
-					for (int i=0; i < jMatches.length(); i++)
-					{
-						JSONObject jMatch = jMatches.getJSONObject(i);
-						if (tournament.getPrivilege()==1&&jMatch.getInt("status")==2)
-							SyncUtils.sendMatch(tournament, jMatch.getInt("id"));
-						else if (jMatch.getInt("status")==1)
-							SyncUtils.getMatch(tournament,jMatch.getInt("id"));
-					}
-					return 1;
+					return 0;
 				}
-				return 0;
+				else
+					return -1;
+
 			} catch (JSONException e) {
 				return null;
 			} catch (ParseException e) {
@@ -567,11 +580,18 @@ public class TournamentActivity extends Activity{
 		
 		@Override
         protected void onPostExecute(Integer result) {
-			if (result==1)
-    			Toast.makeText(getApplicationContext(), "Tournament Sync Success", Toast.LENGTH_SHORT).show();
-			else
+			switch(result)
+			{
+			case 1:
+				Toast.makeText(getApplicationContext(), "Tournament Sync Success", Toast.LENGTH_SHORT).show();
+				break;
+			case 0:
 				Toast.makeText(getApplicationContext(), "Tournament Sync Error", Toast.LENGTH_SHORT).show();
-			
+				break;
+			case -1:
+				Toast.makeText(getApplicationContext(), "Connection problem, please try again later", Toast.LENGTH_LONG).show();
+				break;
+			}
 			progress.dismiss();
 		}
 		
