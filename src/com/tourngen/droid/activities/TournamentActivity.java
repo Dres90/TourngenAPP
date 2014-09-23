@@ -60,7 +60,7 @@ public class TournamentActivity extends Activity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.tournament_menu, menu);
         return true;
     }
 
@@ -86,6 +86,14 @@ public class TournamentActivity extends Activity{
             		new SendTournamentTask().execute(tournament);
         		}
                return true;	
+        	case R.id.delete_button:
+        		progress = new ProgressDialog(this);
+    			progress.setTitle("Deleting Tournament");
+        		progress.setMessage("Please wait while we delete your tournament");
+        		progress.show();
+        		tournament.delete(getApplicationContext());
+        		new DeleteTournamentTask().execute(tournament);
+        		return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -651,5 +659,57 @@ public class TournamentActivity extends Activity{
 		}
 		
     }
+    
+    private class DeleteTournamentTask extends AsyncTask<Tournament, Void, Integer>{
 
+    	private String token = Config.getInstance().getToken();
+    	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+		@Override
+		protected Integer doInBackground(Tournament... params) {
+			
+			try {
+				
+				if (WSRequest.isOnline(getApplicationContext())&&tournament.getPrivilege()==1)
+				{
+					JSONObject jsonPut = new JSONObject();
+					jsonPut.put("token", token);
+					JSONObject jTournament = new JSONObject();
+					jTournament.put("name", tournament.getName());
+					jTournament.put("date_start", simpleDate.format(tournament.getStartDate().getTime()));
+					jTournament.put("date_end", simpleDate.format(tournament.getEndDate().getTime()));
+					jTournament.put("is_public",tournament.isIspublic());
+					jTournament.put("info",tournament.getInfo());
+					jTournament.put("status", false);
+					jsonPut.put("tournament", jTournament);
+					WSRequest requestPut = new WSRequest(WSRequest.PUT,"Tournament",String.valueOf(tournament.getExtId()),null,jsonPut);
+					JSONObject json = requestPut.getJSON();
+					System.out.println(json.toString());
+					if (json.getBoolean("success"))
+						return 1;
+					else
+						return 0;
+				}
+				return 0;
+
+			} catch (JSONException e) {
+				return null;
+			}
+		}
+		
+		
+		@Override
+        protected void onPostExecute(Integer result) {
+			switch(result)
+			{
+			case 1:
+				Toast.makeText(getApplicationContext(), "Tournament deleted!", Toast.LENGTH_SHORT).show();
+				break;
+			case 0:
+				Toast.makeText(getApplicationContext(), "Tournament deleted locally", Toast.LENGTH_SHORT).show();
+				break;
+			}
+			progress.dismiss();
+			finish();
+		}
+    }
 }

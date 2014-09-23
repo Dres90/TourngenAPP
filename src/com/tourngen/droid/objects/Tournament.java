@@ -317,4 +317,28 @@ public class Tournament implements Serializable{
 		}
 
 	}
+	
+	public void delete(Context context)
+	{
+		ArrayList<Integer> ids = Config.getInstance().getIds();
+		ArrayList<String> names = Config.getInstance().getNames();
+		ArrayList<Integer> privileges = Config.getInstance().getPrivileges();
+		int pos;
+		for (pos=0; pos<ids.size();pos++)
+		{
+			if (ids.get(pos)==this.getExtId())
+				break;
+		}
+		ids.remove(pos);
+		names.remove(pos);
+		privileges.remove(pos);
+		
+		String fileName = "t"+extId;
+		boolean deleted = context.deleteFile(fileName);
+		if (deleted)
+			System.out.println("Deleted "+fileName);
+		else
+			System.out.println("Did not delete filename "+fileName);
+		Config.store(context);
+	}
 }

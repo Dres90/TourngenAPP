@@ -52,7 +52,11 @@ public class TournamentListActivity extends Activity implements OnClickListener{
     protected void onResume()
     {
     	super.onResume();
+    	Config.load(getApplicationContext());
     	setTitle(Config.getInstance().getUserName()+"'s Tournaments");
+    	System.out.println(Config.getInstance().getIds());
+    	System.out.println(Config.getInstance().getNames());
+    	System.out.println(Config.getInstance().getPrivileges());
     	renderViews();
     }
 
