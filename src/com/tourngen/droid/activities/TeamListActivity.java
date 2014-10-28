@@ -8,14 +8,11 @@ import com.tourngen.droid.utils.DataHolder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class TeamListActivity extends Activity implements OnItemClickListener{
 	
@@ -37,25 +34,6 @@ public class TeamListActivity extends Activity implements OnItemClickListener{
         teams = new ArrayAdapter<Team>(getApplicationContext(),R.layout.general_list_row,R.id.list_text,tournament.getTeams());
         listview.setAdapter(teams);
         listview.setOnItemClickListener(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch(id)
-        {
-        	case R.id.sync_button:
-            	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
-                return true;	
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 

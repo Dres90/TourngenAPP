@@ -397,9 +397,8 @@ public class TournamentActivity extends Activity{
 				
 
 				WSRequest request = new WSRequest(WSRequest.POST,"Tournament",null,null,jTournament);
-				
+				System.out.println(jTournament);
 				json = request.getJSON();
-				
 				System.out.println(json);
 				if (json.getBoolean("success"))
 				{
@@ -412,8 +411,10 @@ public class TournamentActivity extends Activity{
 				else return -1;
 				
 			} catch (JSONException e) {
+				e.printStackTrace();
 				return null;
 			} catch (ParseException e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
@@ -459,7 +460,7 @@ public class TournamentActivity extends Activity{
 		
 		private void setIds(JSONObject json) throws ParseException
 		{
-			String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+			String dateFormat = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(dateFormat, Locale.US);
 			TimeZone tz = TimeZone.getDefault();
 			int offset = tz.getOffset(Calendar.getInstance().getTimeInMillis())/1000/60/60;

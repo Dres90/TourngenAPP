@@ -50,14 +50,11 @@ public class MainActivity extends Activity {
     
     public void login(View view)
     {	
-    	if (WSRequest.isOnline(getApplicationContext()))
-    	{
     	progress = new ProgressDialog(this);
     	progress.setTitle("Logging in");
     	progress.setMessage("Please wait while we log you in");
     	progress.show();
     	new LoginTask().execute(((TextView) findViewById(R.id.login_user)).getText().toString(),((TextView) findViewById(R.id.login_password)).getText().toString());
-    	}
     }
     
     public void confirmLogin(int status)

@@ -17,7 +17,7 @@ import org.apache.http.params.HttpProtocolParams;
 
 public class CustomHttpClient {
 	
-	private static final int TIMEOUT = 5000;
+	private static final int TIMEOUT = 0;
 	public static final int HTTPS_PORT = 8080;
 	
 	public static HttpClient getHttpClient() {

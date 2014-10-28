@@ -112,18 +112,11 @@ public class TournamentListActivity extends Activity implements OnClickListener{
       }
     public void logout()
     {
-    	if (WSRequest.isOnline(getApplicationContext()))
-    	{
-	    	progress = new ProgressDialog(this);
-	    	progress.setTitle("Logging out");
-	    	progress.setMessage("Please wait while we log you out");
-	    	progress.show();
-	    	new LogOutTask().execute(Config.getInstance().getToken());
-    	}
-    	else
-    	{
-			confirmLogout();
-    	}
+    	progress = new ProgressDialog(this);
+    	progress.setTitle("Logging out");
+    	progress.setMessage("Please wait while we log you out");
+    	progress.show();
+	    new LogOutTask().execute(Config.getInstance().getToken());
     		
     }
     public void confirmLogout()
@@ -145,15 +138,19 @@ public class TournamentListActivity extends Activity implements OnClickListener{
 		@Override
 		protected JSONObject doInBackground(String... params) {
 	    	Config.clear(getApplicationContext());
-			JSONObject json;
-			String token = EscapeUtils.encodeURIComponent(params[0]);
-			WSRequest request = new WSRequest(WSRequest.DELETE,"Login",token,null,null);
-			try {
-				json = request.getJSON();
-				return json;
-			} catch (JSONException e) {
-				return null;
-			}
+	    	if(WSRequest.isOnline(getApplicationContext()))
+	    	{
+	    		JSONObject json;
+				String token = EscapeUtils.encodeURIComponent(params[0]);
+				WSRequest request = new WSRequest(WSRequest.DELETE,"Login",token,null,null);
+				try {
+					json = request.getJSON();
+					return json;
+				} catch (JSONException e) {
+					return null;
+				}
+	    	}
+			return null;
 		}
 		
 		@Override

@@ -14,8 +14,7 @@ import com.tourngen.droid.utils.DataHolder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -23,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.Spinner;
 
 public class FixtureListActivity extends Activity implements OnItemSelectedListener{
@@ -54,26 +52,6 @@ public class FixtureListActivity extends Activity implements OnItemSelectedListe
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch(id)
-        {
-
-        	case R.id.sync_button:
-            	Toast.makeText(getApplicationContext(), "Sync button pressed!", Toast.LENGTH_SHORT).show();
-                return true;	
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    
     private void fillMatches(Fixture fixture)
     {
 
