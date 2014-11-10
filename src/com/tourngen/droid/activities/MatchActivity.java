@@ -22,6 +22,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,16 +97,43 @@ public class MatchActivity extends Activity{
 		((TextView) findViewById(R.id.match_info)).setText(match.getInfo());
         if (p>=1&&p<=2)
         {
-    		((EditText) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
-    		((EditText) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
+        	EditText homeEdit = (EditText) findViewById(R.id.home_score);
+        	EditText awayEdit = (EditText) findViewById(R.id.away_score);
+    		homeEdit.setText(String.valueOf(match.getHomeGoal()));
+    		awayEdit.setText(String.valueOf(match.getAwayGoal()));
+    		TextWatcher watcher= new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                	EditText homeEdit = (EditText) findViewById(R.id.home_score);
+                	EditText awayEdit = (EditText) findViewById(R.id.away_score);
+                	try{
+                		match.setHomeGoal(Integer.valueOf(homeEdit.getText().toString()));
+                		match.setAwayGoal(Integer.valueOf(awayEdit.getText().toString()));
+                	}
+                	catch (NumberFormatException e){
+                		match.setHomeGoal(0);
+                		match.setAwayGoal(0);
+                	}
+            		match.setLast_updated(Calendar.getInstance());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                      //Do something or nothing.                
+                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Do something or nothing
+                }
+            };
+            homeEdit.addTextChangedListener(watcher);
+            awayEdit.addTextChangedListener(watcher);
         }
         else
         {
     		((TextView) findViewById(R.id.home_score)).setText(String.valueOf(match.getHomeGoal()));
     		((TextView) findViewById(R.id.away_score)).setText(String.valueOf(match.getAwayGoal()));
         }
+        
+        
     }
-    
+   
     public void onClick(View view)
     {
     	EditText home = (EditText) findViewById(R.id.home_score);
